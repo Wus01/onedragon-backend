@@ -1,1 +1,25 @@
 # Please write the SQL statement here.
+
+# 공고 테이블 - HIRING_BOARD
+CREATE TABLE HIRING_BOARD (
+  HIRING_NO          SERIAL PRIMARY KEY,                -- 공고번호 (자동 증가 PK)
+  STORE_ID           INT NOT NULL,                      -- 지점ID
+  USER_ID            VARCHAR(30) NOT NULL,              -- 회원ID
+  HIRING_CNT         INT DEFAULT 0,                     -- 조회수
+  HIRING_LIKE_CNT    INT DEFAULT 0,                     -- 찜수
+  DEL_YN             VARCHAR(1) NOT NULL DEFAULT 'N',   -- 삭제여부 (Y/N)
+  HIRING_STS         VARCHAR(3) NOT NULL,               -- 공고상태 (예: ACT, EXP 등)
+  HIRING_DATE        DATE NOT NULL,                     -- 공고작성일자
+  HIRING_UPDT_DATE   DATE,                              -- 공고수정일자
+  SERVICE_TYPE       VARCHAR(10),                       -- 업종
+  WORK_START_DATE    TIMESTAMP,                         -- 근무시작일자
+  WORK_END_DATE      TIMESTAMP,                         -- 근무종료일자
+  NEGOTIABLE_YN      VARCHAR(1),                        -- 협의여부 (Y/N)
+  URGENCY_YN         VARCHAR(10),                       -- 긴급여부 (Y/N 등)
+  HIRING_TITLE       TEXT,                              -- 공고 제목
+  HIRING_TEXT        TEXT,                              -- 공고 내용
+  RGST_DATE          DATE NOT NULL,                     -- 등록일시
+  UPDT_DATE          DATE,                     		    -- 수정일시
+  RGST_ID            VARCHAR(30) NOT NULL,              -- 등록 아이디
+  UPDT_ID            VARCHAR(30)                        -- 수정 아이디
+);
