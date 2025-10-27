@@ -2,27 +2,69 @@
 
 # 공고 테이블 - HIRING_BOARD
 CREATE TABLE HIRING_BOARD (
-  HIRING_NO          SERIAL PRIMARY KEY,                -- 공고번호 (자동 증가 PK)
-  STORE_ID           INT NOT NULL,                      -- 지점ID
-  USER_ID            VARCHAR(30) NOT NULL,              -- 회원ID
-  HIRING_CNT         INT DEFAULT 0,                     -- 조회수
-  HIRING_LIKE_CNT    INT DEFAULT 0,                     -- 찜수
-  DEL_YN             VARCHAR(1) NOT NULL DEFAULT 'N',   -- 삭제여부 (Y/N)
-  HIRING_STS         VARCHAR(3) NOT NULL,               -- 공고상태 (예: ACT, EXP 등)
-  HIRING_DATE        DATE NOT NULL,                     -- 공고작성일자
-  HIRING_UPDT_DATE   DATE,                              -- 공고수정일자
-  SERVICE_TYPE       VARCHAR(10),                       -- 업종
-  WORK_START_DATE    TIMESTAMP,                         -- 근무시작일자
-  WORK_END_DATE      TIMESTAMP,                         -- 근무종료일자
-  NEGOTIABLE_YN      VARCHAR(1),                        -- 협의여부 (Y/N)
-  URGENCY_YN         VARCHAR(10),                       -- 긴급여부 (Y/N 등)
-  HIRING_TITLE       TEXT,                              -- 공고 제목
-  HIRING_TEXT        TEXT,                              -- 공고 내용
-  RGST_DATE          DATE NOT NULL,                     -- 등록일시
-  UPDT_DATE          DATE,                     		    -- 수정일시
-  RGST_ID            VARCHAR(30) NOT NULL,              -- 등록 아이디
-  UPDT_ID            VARCHAR(30)                        -- 수정 아이디
+    HIRING_NO          SERIAL PRIMARY KEY,                -- 공고번호 (자동 증가 PK)
+    STORE_ID           INT NOT NULL,                      -- 지점ID
+    USER_ID            VARCHAR(30) NOT NULL,              -- 회원ID
+    HIRING_CNT         INT DEFAULT 0,                     -- 조회수
+    HIRING_LIKE_CNT    INT DEFAULT 0,                     -- 찜수
+    DEL_YN             VARCHAR(1) NOT NULL DEFAULT 'N',   -- 삭제여부 (Y/N)
+    HIRING_STS         VARCHAR(3) NOT NULL,               -- 공고상태 (예: ACT, EXP 등)
+    HIRING_DATE        DATE NOT NULL,                     -- 공고작성일자
+    HIRING_UPDT_DATE   DATE,                              -- 공고수정일자
+    SERVICE_TYPE       VARCHAR(10),                       -- 업종
+    WORK_START_DATE    TIMESTAMP,                         -- 근무시작일자
+    WORK_END_DATE      TIMESTAMP,                         -- 근무종료일자
+    NEGOTIABLE_YN      VARCHAR(1),                        -- 협의여부 (Y/N)
+    URGENCY_YN         VARCHAR(10),                       -- 긴급여부 (Y/N)
+    HIRING_TITLE       TEXT,                              -- 공고 제목
+    HIRING_TEXT        TEXT,                              -- 공고 내용
+    RGST_DATE          DATE NOT NULL,                     -- 등록일시
+    UPDT_DATE          DATE,                     		    -- 수정일시
+    RGST_ID            VARCHAR(30) NOT NULL,              -- 등록 아이디
+    UPDT_ID            VARCHAR(30)                        -- 수정 아이디
 );
+
+    COMMENT ON TABLE HIRING_BOARD IS '공고 테이블';
+
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_NO IS '공고번호(seq)';
+    COMMENT ON COLUMN HIRING_BOARD.STORE_ID IS '지점ID';
+    COMMENT ON COLUMN HIRING_BOARD.USER_ID IS '회원ID';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_CNT IS '조회수';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_LIKE_CNT IS '찜수';
+    COMMENT ON COLUMN HIRING_BOARD.DEL_YN IS '삭제여부 (Y/N)';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_STS IS '공고상태 (예: ACT, EXP 등)';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_DATE IS '공고작성일자';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_UPDT_DATE IS '공고수정일자';
+    COMMENT ON COLUMN HIRING_BOARD.SERVICE_TYPE IS '업종';
+    COMMENT ON COLUMN HIRING_BOARD.WORK_START_DATE IS '근무시작일자';
+    COMMENT ON COLUMN HIRING_BOARD.WORK_END_DATE IS '근무종료일자';
+    COMMENT ON COLUMN HIRING_BOARD.NEGOTIABLE_YN IS '협의여부 (Y/N)';
+    COMMENT ON COLUMN HIRING_BOARD.URGENCY_YN IS '긴급여부 (Y/N)';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_TITLE IS '공고 제목';
+    COMMENT ON COLUMN HIRING_BOARD.HIRING_TEXT IS '공고 내용';
+    COMMENT ON COLUMN HIRING_BOARD.RGST_DATE IS '등록일시';
+    COMMENT ON COLUMN HIRING_BOARD.UPDT_DATE IS '수정일시';
+    COMMENT ON COLUMN HIRING_BOARD.RGST_ID IS '등록 아이디';
+    COMMENT ON COLUMN HIRING_BOARD.UPDT_ID IS '수정 아이디';
+
+
+# 공고 찜 테이블
+CREATE TABLE hiring_like (
+    no SERIAL PRIMARY KEY,                      -- 번호(seq)
+    hiring_no INT NOT NULL,                     -- 공고번호
+    store_id INT NOT NULL,                      -- 지점ID
+    user_id VARCHAR(30) NOT NULL,               -- 회원 ID
+    like_yn VARCHAR(1) NOT NULL DEFAULT 'N'     -- 'Y/N' 찜 여부
+);
+
+    COMMENT ON TABLE hiring_like IS '공고 찜 테이블';
+
+    COMMENT ON COLUMN hiring_like.no IS '번호(seq)';
+    COMMENT ON COLUMN hiring_like.hiring_no IS '공고번호';
+    COMMENT ON COLUMN hiring_like.store_id IS '지점ID';
+    COMMENT ON COLUMN hiring_like.user_id IS '찜한 회원 ID';
+    COMMENT ON COLUMN hiring_like.like_yn IS '찜 여부 (Y/N)';
+
 
 # 지원정보 테이블
 CREATE table APPLY_INFO (
@@ -48,3 +90,27 @@ CREATE table APPLY_INFO (
 	COMMENT ON COLUMN APPLY_INFO.RGST_ID IS '등록아이디';
 	COMMENT ON COLUMN APPLY_INFO.UPDT_DATE IS '수정일시';
 	COMMENT ON COLUMN APPLY_INFO.UPDT_ID IS '수정아이디';
+
+
+# 지점 테이블
+CREATE TABLE store_info (
+    STORE_ID INT PRIMARY KEY,                 -- 지점ID
+    STORE_NM VARCHAR(500) NOT NULL,           -- 지점명
+    STORE_ADDR VARCHAR(1000) NOT NULL,        -- 주소
+    STORE_CTGRY VARCHAR(10) NOT NULL,         -- 업종
+    RGST_ID varchar(30) NOT NULL,             -- 등록 아이디
+    RGST_UPDT_DATE TIMESTAMP NOT NULL, 	 	  -- 등록일시
+    UPDT_ID varchar(30),                      -- 수정 아이디
+    UPDT_DATE TIMESTAMP      				  -- 수정일시
+);
+
+    COMMENT ON TABLE STORE_INFO IS '지점 테이블';
+
+    COMMENT ON COLUMN STORE_INFO.STORE_ID IS '지점ID';
+    COMMENT ON COLUMN STORE_INFO.STORE_NM IS '지점명';
+    COMMENT ON COLUMN STORE_INFO.STORE_ADDR IS '주소';
+    COMMENT ON COLUMN STORE_INFO.STORE_CTGRY IS '업종';
+    COMMENT ON COLUMN STORE_INFO.RGST_ID IS '등록 아이디';
+    COMMENT ON COLUMN STORE_INFO.RGST_UPDT_DATE IS '등록일시';
+    COMMENT ON COLUMN STORE_INFO.UPDT_ID IS '수정 아이디';
+    COMMENT ON COLUMN STORE_INFO.UPDT_DATE IS '수정일시';
