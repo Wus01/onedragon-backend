@@ -18,8 +18,8 @@ CREATE TABLE HIRING_BOARD (
     URGENCY_YN         VARCHAR(10),                       -- 긴급여부 (Y/N)
     HIRING_TITLE       TEXT,                              -- 공고 제목
     HIRING_TEXT        TEXT,                              -- 공고 내용
-    RGST_DATE          DATE NOT NULL,                     -- 등록일시
-    UPDT_DATE          DATE,                     		    -- 수정일시
+    RGST_DATE          TIMESTAMP NOT NULL,                -- 등록일시
+    UPDT_DATE          TIMESTAMP,                     	  -- 수정일시
     RGST_ID            VARCHAR(30) NOT NULL,              -- 등록 아이디
     UPDT_ID            VARCHAR(30)                        -- 수정 아이디
 );
@@ -50,11 +50,13 @@ CREATE TABLE HIRING_BOARD (
 
 # 공고 찜 테이블
 CREATE TABLE hiring_like (
-    no SERIAL PRIMARY KEY,                      -- 번호(seq)
-    hiring_no INT NOT NULL,                     -- 공고번호
-    store_id INT NOT NULL,                      -- 지점ID
-    user_id VARCHAR(30) NOT NULL,               -- 회원 ID
-    like_yn VARCHAR(1) NOT NULL DEFAULT 'N'     -- 'Y/N' 찜 여부
+    no SERIAL   PRIMARY KEY,                        -- 번호(seq)
+    hiring_no   INT NOT NULL,                       -- 공고번호
+    store_id    INT NOT NULL,                       -- 지점ID
+    user_id     VARCHAR(30) NOT NULL,               -- 회원 ID
+    like_yn     VARCHAR(1) NOT NULL DEFAULT 'N',    -- 'Y/N' 찜 여부
+    rgst_date   TIMESTAMP NOT NULL,                 -- 등록일시
+    rgst_id     VARCHAR(30) NOT NULL                -- 등록 아이디
 );
 
     COMMENT ON TABLE hiring_like IS '공고 찜 테이블';
@@ -64,6 +66,8 @@ CREATE TABLE hiring_like (
     COMMENT ON COLUMN hiring_like.store_id IS '지점ID';
     COMMENT ON COLUMN hiring_like.user_id IS '찜한 회원 ID';
     COMMENT ON COLUMN hiring_like.like_yn IS '찜 여부 (Y/N)';
+    COMMENT ON COLUMN hiring_like.rgst_date IS '등록 일시';
+    COMMENT ON COLUMN hiring_like.rgst_id IS '등록 아이디';
 
 
 # 지원정보 테이블
@@ -99,7 +103,7 @@ CREATE TABLE store_info (
     STORE_ADDR VARCHAR(1000) NOT NULL,        -- 주소
     STORE_CTGRY VARCHAR(10) NOT NULL,         -- 업종
     RGST_ID varchar(30) NOT NULL,             -- 등록 아이디
-    RGST_UPDT_DATE TIMESTAMP NOT NULL, 	 	  -- 등록일시
+    RGST_DATE TIMESTAMP NOT NULL, 	 	      -- 등록일시
     UPDT_ID varchar(30),                      -- 수정 아이디
     UPDT_DATE TIMESTAMP      				  -- 수정일시
 );
@@ -111,6 +115,6 @@ CREATE TABLE store_info (
     COMMENT ON COLUMN STORE_INFO.STORE_ADDR IS '주소';
     COMMENT ON COLUMN STORE_INFO.STORE_CTGRY IS '업종';
     COMMENT ON COLUMN STORE_INFO.RGST_ID IS '등록 아이디';
-    COMMENT ON COLUMN STORE_INFO.RGST_UPDT_DATE IS '등록일시';
+    COMMENT ON COLUMN STORE_INFO.RGST_DATE IS '등록일시';
     COMMENT ON COLUMN STORE_INFO.UPDT_ID IS '수정 아이디';
     COMMENT ON COLUMN STORE_INFO.UPDT_DATE IS '수정일시';
