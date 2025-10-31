@@ -125,9 +125,9 @@ CREATE TABLE USER_INFO (
     USER_TYPE           VARCHAR(1) NOT NULL DEFAULT 'E',	-- 점주알바생구분 (R/E)
     EMPLOYER_AUTH_YN	VARCHAR(1) NOT NULL DEFAULT 'N',	-- 점주인증구분 (Y/N)
     AGREEMENT_TERMS     BOOLEAN NOT NULL,					-- 개인정보동의여부
-    DEL_DATE			DATE NOT NULL,						-- 탈퇴일시
+    DEL_DATE			DATE,       						-- 탈퇴일시
     RGST_DATE			DATE NOT NULL,						-- 등록일시
-    UPDT_DATE			DATE NOT NULL,						-- 수정일시
+    UPDT_DATE			DATE,       						-- 수정일시
     RGST_ID				VARCHAR(30) NOT NULL,				-- 등록 아이디
     UPDT_ID				VARCHAR(30)							-- 수정 아이디
 );
