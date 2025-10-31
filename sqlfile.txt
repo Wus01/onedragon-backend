@@ -120,7 +120,7 @@ CREATE TABLE USER_INFO (
     USER_ID				VARCHAR(30) PRIMARY KEY,			-- 회원ID
     USER_NM				VARCHAR(10) NOT NULL,				-- 회원명
     USER_PWD			VARCHAR(50) NOT NULL,				-- 회원비밀번호
-    USER_EMAIL			VARCHAR(50) DEFAULT 0,				-- 회원이메일
+    USER_EMAIL			VARCHAR(50),						-- 회원이메일
     USER_DEL_YN			VARCHAR(1) NOT NULL DEFAULT 'N',	-- 회원탈퇴여부
     USER_TYPE           VARCHAR(1) NOT NULL DEFAULT 'E',	-- 점주알바생구분 (R/E)
     EMPLOYER_AUTH_YN	VARCHAR(1) NOT NULL DEFAULT 'N',	-- 점주인증구분 (Y/N)
