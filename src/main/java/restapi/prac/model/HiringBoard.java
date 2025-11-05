@@ -2,14 +2,16 @@ package restapi.prac.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-public class Hiring {
+@Table(name = "hiring_board")
+public class HiringBoard {
     @Id
     private Long hiringNo;
     private Long storeId;
     private Long hiringCnt;
-    private Long hiringlikeCnt;
+    private Long hiringLikeCnt;
     private String delYn;
     private String hiringSts;
     private String hiringDate;
@@ -50,12 +52,12 @@ public class Hiring {
         this.hiringCnt = hiringCnt;
     }
 
-    public Long getHiringlikeCnt() {
-        return hiringlikeCnt;
+    public Long getHiringLikeCnt() {
+        return hiringLikeCnt;
     }
 
-    public void setHiringlikeCnt(Long hiringlikeCnt) {
-        this.hiringlikeCnt = hiringlikeCnt;
+    public void setHiringLikeCnt(Long hiringlikeCnt) {
+        this.hiringLikeCnt = hiringlikeCnt;
     }
 
     public String getDelYn() {

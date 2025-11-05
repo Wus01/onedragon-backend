@@ -1,0 +1,22 @@
+package restapi.prac.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import restapi.prac.model.ApplyInfo;
+import restapi.prac.service.ApplyService;
+
+import java.util.List;
+
+@Repository
+public interface ApplyRepository extends JpaRepository<ApplyInfo, Long> {
+
+    /**
+     * 특정 공고 번호(hiringNo)에 해당하는 모든 지원 정보(ApplyInfo) 목록을 조회합니다.
+     * * @param hiringNo 조회할 공고의 ID
+     * @return 해당 공고에 지원한 모든 지원자 목록
+     */
+    List<ApplyInfo> findByHiringNo(Long hiringNo);
+
+    // 만약 ApplyInfo 엔티티에 Hiring 엔티티 객체가 필드로 있다면 아래와 같이 사용 가능:
+//     List<ApplyInfo> findByHiringNo(ApplyService hiringNo);
+}
