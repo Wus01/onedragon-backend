@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/apply")
+@RequestMapping("api/apply")
 public class ApplyController {
     @Autowired
     private ApplyService applyService;

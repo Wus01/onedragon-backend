@@ -17,6 +17,6 @@ public class HiringService {
     //상세조회
     public Optional<HiringBoard> getPost(Long id){
 
-        return hiringRepository.findById(id);
+        return hiringRepository.findByIdWithStoreInfo(id);
     }
 }

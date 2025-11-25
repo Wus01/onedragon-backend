@@ -1,15 +1,14 @@
 package restapi.prac.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import restapi.prac.controller.StoreInfoController;
 
 @Entity
 @Table(name = "hiring_board")
 public class HiringBoard {
     @Id
     private Long hiringNo;
-    private Long storeId;
+//    private Long storeId;
     private Long hiringCnt;
     private Long hiringLikeCnt;
     private String delYn;
@@ -28,6 +27,18 @@ public class HiringBoard {
     private String rgstId;
     private String updtId;
 
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정 (성능 최적화)
+    @JoinColumn(name = "store_id") // DB의 hiring_board 테이블에 있는 외래 키 컬럼 이름
+    private StoreDO storeInfo;
+
+    public StoreDO getStoreInfo() {
+        return storeInfo;
+    }
+
+    public void setStoreInfo(StoreDO storeInfo) {
+        this.storeInfo = storeInfo;
+    }
+
     public Long getHiringNo() {
         return hiringNo;
     }
@@ -36,13 +47,13 @@ public class HiringBoard {
         this.hiringNo = hiringNo;
     }
 
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
+//    public Long getStoreId() {
+//        return storeId;
+//    }
+//
+//    public void setStoreId(Long storeId) {
+//        this.storeId = storeId;
+//    }
 
     public Long getHiringCnt() {
         return hiringCnt;
