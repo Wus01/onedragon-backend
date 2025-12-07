@@ -6,5 +6,5 @@ import restapi.prac.model.UserInfo;
 
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
-
+    UserInfo findByUserId(String userId);
 }

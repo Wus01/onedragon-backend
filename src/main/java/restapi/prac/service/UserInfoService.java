@@ -36,4 +36,21 @@ public class UserInfoService {
 
         return userInfoRepository.save(userInfo);
     }
+
+    // 로그인
+    public UserInfo login(String userId, String rawPassword) {
+        UserInfo user = userInfoRepository.findByUserId(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
+        }
+
+        // 저장된 비밀번호는 bcrypt 해시 → 평문과 비교해야 함
+        if (!passwordEncoder.matches(rawPassword, user.getUserPwd())) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
+        }
+
+        return user;
+    }
+
 }
