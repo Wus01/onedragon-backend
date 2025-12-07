@@ -2,8 +2,10 @@ package restapi.prac.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import restapi.prac.common.ApiResponse;
 import restapi.prac.model.CrrHstrVo;
 import restapi.prac.service.CrrHstrService;
 
@@ -20,7 +22,7 @@ public class CrrHstrController {
 * */
     @Autowired
     private CrrHstrService crrHstrService;
-
+/*
     // SELECT 1
     @GetMapping("/{userId}/{storeId}")
     @Operation(summary = "재직이력 조회", description = "userId와 storeId로 회원의 재직 이력을 조회합니다.")
@@ -29,6 +31,21 @@ public class CrrHstrController {
         Optional<CrrHstrVo> crrHstrOpt = crrHstrService.getCrrHstr(userId,storeId);
         return crrHstrOpt.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
+*/
+    @GetMapping("/{userId}/{storeId}")
+    @Operation(summary = "재직이력 조회", description = "userId와 storeId로 회원의 재직 이력을 조회합니다.")
+    public ResponseEntity<ApiResponse<CrrHstrVo>> getCrrHstr(@PathVariable Integer userId,
+                                                             @PathVariable Integer storeId) {
+
+        Optional<CrrHstrVo> crrHstrOpt = crrHstrService.getCrrHstr(userId, storeId);
+
+        return crrHstrOpt
+                .map(data -> ResponseEntity.ok(ApiResponse.ok(data))) // 200 OK
+                .orElseGet(() -> ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("재직 이력이 없습니다."))); // 404
+    }
+
 
 
     // UPDATE
