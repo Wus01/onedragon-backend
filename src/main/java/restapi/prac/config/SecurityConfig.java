@@ -9,6 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
     // 비밀번호 인코딩
     @Bean
     public PasswordEncoder passwordEncoder() {
