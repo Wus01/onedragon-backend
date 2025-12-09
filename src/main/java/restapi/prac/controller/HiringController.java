@@ -1,11 +1,11 @@
 package restapi.prac.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.HiringBoard;
 import restapi.prac.service.HiringService;
 
@@ -27,6 +27,15 @@ public class HiringController {
 //        Optional<Hiring> hiringOpt = hiringService.getPost(id);
 //        return hiringOpt.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
 //    }
+
+    // 공고 리스트 조회
+    @GetMapping("/getHirings")
+    public ResponseEntity<Page<HiringBoard>> listStoreInfo(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<HiringBoard> stores = hiringService.getHirings(pageable);
+        return ResponseEntity.ok().body(stores);
+    }
 
     // 상세보기를 위한 최종 코드
     @GetMapping("/{id}")

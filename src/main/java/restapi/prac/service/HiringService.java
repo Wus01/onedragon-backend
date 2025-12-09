@@ -1,5 +1,7 @@
 package restapi.prac.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import restapi.prac.model.HiringBoard;
 import restapi.prac.repository.HiringRepository;
@@ -14,6 +16,10 @@ public class HiringService {
         this.hiringRepository = hiringRepository;
     }
 
+    // 전체조회
+    public Page<HiringBoard> getHirings(Pageable pageable) {
+        return hiringRepository.findAll(pageable);
+    }
     //상세조회
     public Optional<HiringBoard> getPost(Long id){
 

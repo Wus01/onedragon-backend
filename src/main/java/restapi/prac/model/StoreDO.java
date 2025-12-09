@@ -1,11 +1,13 @@
 package restapi.prac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "store_info")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})          // JSON 직렬화 문제 해결
 public class StoreDO {
 
     @Id
