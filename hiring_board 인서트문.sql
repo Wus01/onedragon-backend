@@ -1,5 +1,5 @@
 
-
+-- PAY_PER_HOUR 추가하기!!!!
     INSERT INTO HIRING_BOARD
     (HIRING_NO
     , STORE_ID

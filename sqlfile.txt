@@ -18,11 +18,15 @@ CREATE TABLE HIRING_BOARD (
     URGENCY_YN         VARCHAR(10),                       -- 긴급여부 (Y/N)
     HIRING_TITLE       TEXT,                              -- 공고 제목
     HIRING_TEXT        TEXT,                              -- 공고 내용
+    PAY_PER_HOUR       VARCHAR(10) NOT NULL DEFAULT '0',  -- 급여
     RGST_DATE          TIMESTAMP NOT NULL,                -- 등록일시
     UPDT_DATE          TIMESTAMP,                     	  -- 수정일시
     RGST_ID            VARCHAR(30) NOT NULL,              -- 등록 아이디
     UPDT_ID            VARCHAR(30)                        -- 수정 아이디
 );
+
+    // db 삭제 안 하실 분들은 이거 사용하세용
+    ALTER TABLE hiring_board ADD COLUMN PAY_PER_HOUR VARCHAR(10) DEFAULT '0';
 
     COMMENT ON TABLE HIRING_BOARD IS '공고 테이블';
 

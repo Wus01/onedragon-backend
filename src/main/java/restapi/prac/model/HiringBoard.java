@@ -22,6 +22,7 @@ public class HiringBoard {
     private String urgencyYn;
     private String hiringTitle;
     private String hiringText;
+    private String payPerHour;
     private String rgstDate;
     private String updtDate;
     private String rgstId;
@@ -189,5 +190,13 @@ public class HiringBoard {
 
     public void setUpdtId(String updtId) {
         this.updtId = updtId;
+    }
+
+    public String getPayPerHour() {
+        return payPerHour;
+    }
+
+    public void setPayPerHour(String payPerHour) {
+        this.payPerHour = payPerHour;
     }
 }
