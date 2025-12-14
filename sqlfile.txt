@@ -130,7 +130,7 @@ CREATE TABLE USER_INFO (
     USER_ID				VARCHAR(30) PRIMARY KEY,			-- 회원ID
     USER_NM				VARCHAR(10) NOT NULL,				-- 회원명
     USER_PWD			VARCHAR(50) NOT NULL,				-- 회원비밀번호
-    USER_EMAIL			VARCHAR(50),						-- 회원이메일
+    USER_EMAIL			VARCHAR(50) UNIQUE,					-- 회원이메일
     USER_DEL_YN			VARCHAR(1) NOT NULL DEFAULT 'N',	-- 회원탈퇴여부
     USER_TYPE           VARCHAR(1) NOT NULL DEFAULT 'E',	-- 점주알바생구분 (R/E)
     EMPLOYER_AUTH_YN	VARCHAR(1) NOT NULL DEFAULT 'N',	-- 점주인증구분 (Y/N)
@@ -184,3 +184,23 @@ CREATE TABLE USER_INFO (
     COMMENT ON COLUMN CRR_HSTR.UPDT_ID       IS '수정 아이디';
     COMMENT ON COLUMN CRR_HSTR.UPDT_DATE     IS '수정 날짜';
     COMMENT ON COLUMN CRR_HSTR.DEL_YN        IS '삭제 여부';
+
+#회원 정보 insert문
+
+INSERT INTO public.user_info
+(
+	user_id,user_nm,user_pwd,user_email,user_del_yn,user_type,employer_auth_yn,agreement_terms,del_date,rgst_date,updt_date,rgst_id,updt_id
+)
+VALUES
+(
+	'test1','김한희','test1','test1@gmail.com','N','E','N',false,NULL,'2025-11-09 15:30:41.83',NULL,'test1',NULL
+),
+(
+	'test2','황원정','test2','test2@gmail.com','N','E','N',false,NULL,'2025-11-09 15:59:33.975',NULL,'test2',NULL
+),
+(
+	'test3','곽혜진','test3','test3@gmail.com','N','E','N',false,NULL,'2025-11-09 16:20:04.453',NULL,'test3',NUL
+),
+(
+	'test4','황지현','test4','test4@gmail.com','N','E','N',true,NULL,'2025-11-09 16:35:32.509',NULL,'test4',NULL
+);

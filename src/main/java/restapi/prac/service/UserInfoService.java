@@ -15,6 +15,7 @@ public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     // 저장
     public UserInfo createUserInfo(UserInfo userInfo){
@@ -49,6 +50,10 @@ public class UserInfoService {
         if (!passwordEncoder.matches(rawPassword, user.getUserPwd())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
+
+        // JWT 토큰 생성
+        String generatedToken = jwtService.generateToken(userId);
+        user.setToken(generatedToken);
 
         return user;
     }

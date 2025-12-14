@@ -48,4 +48,7 @@ public class UserInfo {
 
     @Column
     private String updtId;
+
+    @Transient
+    private String token;
 }
