@@ -1,6 +1,7 @@
 package restapi.prac.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import restapi.prac.model.ApplyInfo;
 import restapi.prac.model.HiringBoard;
 import restapi.prac.repository.ApplyRepository;
@@ -25,8 +26,14 @@ public class ApplyService {
     }
 
     //공고별 지원자리스트 조회
-    public List<ApplyInfo> getApplicantsByHiringId(Long id){
+//    public List<ApplyInfo> getApplicantsByHiringId(Long id){
+//
+//        return applyRepository.findByHiringNo(id);
+//    }
 
-        return applyRepository.findByHiringNo(id);
+    @Transactional(readOnly = true)
+    public List<ApplyInfo> getApplyListByHiringNo(Long hiringNo) {
+
+        return applyRepository.findByHiringNoWithUserInfo(hiringNo);
     }
 }

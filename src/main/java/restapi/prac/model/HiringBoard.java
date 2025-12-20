@@ -3,12 +3,14 @@ package restapi.prac.model;
 import jakarta.persistence.*;
 import restapi.prac.controller.StoreInfoController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "hiring_board")
 public class HiringBoard {
     @Id
     private Long hiringNo;
-//    private Long storeId;
     private Long hiringCnt;
     private Long hiringLikeCnt;
     private String delYn;
@@ -32,6 +34,19 @@ public class HiringBoard {
     @JoinColumn(name = "store_id") // DB의 hiring_board 테이블에 있는 외래 키 컬럼 이름
     private StoreDO storeInfo;
 
+    // HiringBoard.java 에 추가
+
+    @OneToMany(mappedBy = "hiringBoard") // ApplyInfo 엔티티에 있는 hiringBoard 필드에 의해 매핑됨
+    private List<ApplyInfo> applyList = new ArrayList<>();
+
+    public List<ApplyInfo> getApplyList() {
+        return applyList;
+    }
+
+    public void setApplyList(List<ApplyInfo> applyList) {
+        this.applyList = applyList;
+    }
+
     public StoreDO getStoreInfo() {
         return storeInfo;
     }
@@ -47,14 +62,6 @@ public class HiringBoard {
     public void setHiringNo(Long hiringNo) {
         this.hiringNo = hiringNo;
     }
-
-//    public Long getStoreId() {
-//        return storeId;
-//    }
-//
-//    public void setStoreId(Long storeId) {
-//        this.storeId = storeId;
-//    }
 
     public Long getHiringCnt() {
         return hiringCnt;

@@ -38,21 +38,33 @@ public class ApplyController {
 
     }
 
-    @GetMapping("/list/{id}")
-    public ResponseEntity<List<ApplyInfo>> getApplicantsByHiringId(@PathVariable Long id){
-        // 1. Service에서 리스트를 가져오는 새로운 메서드를 호출해야 합니다.
-        //    (이전에 논의했던 applyService.getApplicantsByHiringId(hiringId) 사용)
-        List<ApplyInfo> applierList = applyService.getApplicantsByHiringId(id);
+//    @GetMapping("/list/{id}")
+//    public ResponseEntity<List<ApplyInfo>> getApplicantsByHiringId(@PathVariable Long id){
+//        // 1. Service에서 리스트를 가져오는 새로운 메서드를 호출해야 합니다.
+//        //    (이전에 논의했던 applyService.getApplicantsByHiringId(hiringId) 사용)
+//        List<ApplyInfo> applierList = applyService.getApplicantsByHiringId(id);
+//
+//        System.out.println("DEBUG: 지원자 목록 조회 완료. 개수: " + applierList.size());
+//
+//        if (applierList.isEmpty()) {
+//            // 데이터가 없을 경우: 204 No Content 또는 200 OK와 빈 리스트 반환 (프론트엔드 처리 용이)
+//            return ResponseEntity.ok(applierList); // 200 OK와 빈 리스트 [] 반환
+//        }
+//
+//        // 2. 리스트가 존재할 경우: 200 OK와 함께 목록을 반환
+//        return ResponseEntity.ok(applierList);
+//
+//    }
 
-        System.out.println("DEBUG: 지원자 목록 조회 완료. 개수: " + applierList.size());
+    @GetMapping("/list/{hiringNo}")
+    public ResponseEntity<List<ApplyInfo>> getApplyListByHiringNo(@PathVariable Long hiringNo) {
+        List<ApplyInfo> applierList = applyService.getApplyListByHiringNo(hiringNo);
 
-        if (applierList.isEmpty()) {
-            // 데이터가 없을 경우: 204 No Content 또는 200 OK와 빈 리스트 반환 (프론트엔드 처리 용이)
-            return ResponseEntity.ok(applierList); // 200 OK와 빈 리스트 [] 반환
-        }
+        // 리스트가 비어있어도 ok(applierList)를 하면 프론트에 []가 가니까 괜찮습니다.
+        // 로그는 찍어두면 디버깅할 때 아주 편해요!
+        System.out.println("DEBUG: 공고번호 " + hiringNo + "의 지원자 수: " + applierList.size());
 
-        // 2. 리스트가 존재할 경우: 200 OK와 함께 목록을 반환
         return ResponseEntity.ok(applierList);
-
     }
+
 }

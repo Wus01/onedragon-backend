@@ -1,14 +1,12 @@
 package restapi.prac.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 
 @Entity
 public class ApplyInfo {
     @Id
     private Long applyNo;
-    private Long hiringNo;
-    private String userId;
     private String applyDate;
     private String applySucYn;
     private String rgstDate;
@@ -16,28 +14,39 @@ public class ApplyInfo {
     private String updtDate;
     private String updtId;
 
+    // ApplyInfo.java (예시)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hiring_no")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applyList"})
+    private HiringBoard hiringBoard;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"applyList", "handler", "hibernateLazyInitializer"}) // applyList 참조 차단
+    private UserInfo userInfo; // 지원한 유저 정보
+
+    public HiringBoard getHiringBoard() {
+        return hiringBoard;
+    }
+
+    public void setHiringBoard(HiringBoard hiringBoard) {
+        this.hiringBoard = hiringBoard;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public Long getApplyNo() {
         return applyNo;
     }
 
     public void setApplyNo(Long applyNo) {
         this.applyNo = applyNo;
-    }
-
-    public Long getHiringNo() {
-        return hiringNo;
-    }
-
-    public void setHiringNo(Long hiringNo) {
-        this.hiringNo = hiringNo;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getApplyDate() {

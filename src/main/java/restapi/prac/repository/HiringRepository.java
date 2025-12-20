@@ -15,4 +15,11 @@ public interface HiringRepository extends JpaRepository<HiringBoard, Long> {
     @Query("SELECT h FROM HiringBoard h JOIN FETCH h.storeInfo WHERE h.id = :id")
     Optional<HiringBoard> findByIdWithStoreInfo(@Param("id") Long id);
 
+    @Query("SELECT h FROM HiringBoard h " +
+            "JOIN FETCH h.storeInfo " + // 기존 상점 정보
+            "LEFT JOIN FETCH h.applyList al " + // 지원 정보 (지원자가 없을 수도 있으니 LEFT JOIN 추천)
+            "LEFT JOIN FETCH al.userInfo " + // 지원한 유저 정보
+            "WHERE h.hiringNo = :hiringNo")
+    Optional<HiringBoard> findDetailWithApplyAndUser(@Param("hiringNo") Long hiringNo);
+
 }
