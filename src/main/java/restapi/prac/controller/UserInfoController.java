@@ -1,6 +1,7 @@
 package restapi.prac.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.UserInfo;
@@ -23,9 +24,9 @@ public class UserInfoController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
-        String userId = loginData.get("userId");
-        String userPwd = loginData.get("userPwd");
+    public ResponseEntity<?> login(@RequestBody Map<String, String> data) {
+        String userId = data.get("userId");
+        String userPwd = data.get("userPwd");
 
         try {
             UserInfo user = userInfoService.login(userId, userPwd);
@@ -35,4 +36,31 @@ public class UserInfoController {
         }
     }
 
+    // 아이디 찾기
+    @PostMapping("/findId")
+    public ResponseEntity<?> findId(@RequestBody Map<String, String> data) {
+        String userEmail = data.get("userEmail");
+
+        try {
+            String findId = userInfoService.findId(userEmail);
+            return ResponseEntity.ok(Map.of("success", true, "userId", findId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+    // 비밀번호 찾기
+    @PostMapping("/findPw")
+    public ResponseEntity<?> findPw(@RequestBody Map<String, String> data) {
+        String userId = data.get("userId");
+        String userEmail = data.get("userEmail");
+
+        try {
+            String findPw = userInfoService.findPw(userId, userEmail);
+            return ResponseEntity.ok(Map.of("success", true, "userPwd", findPw));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
 }

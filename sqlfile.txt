@@ -142,6 +142,10 @@ CREATE TABLE USER_INFO (
     UPDT_ID				VARCHAR(30)							-- 수정 아이디
 );
 
+# 회원 테이블에 회원 핸드폰번호 컬럼 추가
+ALTER TABLE user_info ADD user_phone_nm VARCHAR(20) NOT NULL DEFAULT '';
+COMMENT ON COLUMN user_info.user_phone_nm IS '회원 핸드폰번호';
+
     COMMENT ON TABLE USER_INFO IS '회원 테이블';
     COMMENT ON COLUMN USER_INFO.USER_ID IS '회원ID';
     COMMENT ON COLUMN USER_INFO.USER_NM IS '회원명';

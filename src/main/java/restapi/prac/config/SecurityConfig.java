@@ -16,14 +16,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 회원가입 테스트용
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())       // CSRF 비활성화
+            // CSRF 설정 (람다식 사용)
+            .csrf(csrf -> csrf.disable())
+
+            // HTTP Basic 인증 팝업창 비활성화
+            .httpBasic(httpBasic -> httpBasic.disable())
+
+            // 경로별 권한 설정
             .authorizeHttpRequests(auth -> auth
-                    .anyRequest().permitAll()                           // 모든 요청 허용
-            );
+            .requestMatchers("/api/userInfo/login", "/api/userInfo/findId", "/api/userInfo/findPw").permitAll()
+            .anyRequest().authenticated() // 그 외는 인증 필요
+        );
+
         return http.build();
     }
 }
