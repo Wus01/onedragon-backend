@@ -11,7 +11,7 @@ public class CrrHstrVo extends BaseTimeEntity {
 
     @Id
     @Column(name = "USER_ID")
-    private Integer userId;
+    private String userId;
 
     @Id
     @Column(name = "STORE_ID")
