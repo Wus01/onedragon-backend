@@ -37,6 +37,7 @@ public class CrrHstrController {
     public ResponseEntity<ApiResponse<CrrHstrVo>> getCrrHstr(@PathVariable Integer userId,
                                                              @PathVariable Integer storeId) {
 
+        System.out.print("조회되냠냠쩝접");
         Optional<CrrHstrVo> crrHstrOpt = crrHstrService.getCrrHstr(userId, storeId);
 
         return crrHstrOpt
