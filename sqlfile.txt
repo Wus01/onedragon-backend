@@ -162,19 +162,21 @@ COMMENT ON COLUMN user_info.user_phone_nm IS '회원 핸드폰번호';
     COMMENT ON COLUMN USER_INFO.UPDT_ID IS '수정 아이디';
 
 # 경력 테이블
-    CREATE TABLE CRR_HSTR (
-        USER_ID VARCHAR(30) NOT NULL,
-        STORE_ID INT NOT NULL,
-        CRR_STRT_DATE VARCHAR(8) NOT NULL ,
-        CRR_END_DATE VARCHAR(8),
-        AUTH_YN BOOLEAN NOT NULL DEFAULT FALSE,
-        RGST_ID VARCHAR(30),
-        RGST_DATE TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        UPDT_ID VARCHAR(30),
-        UPDT_DATE TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        DEL_YN BOOLEAN NOT NULL DEFAULT 'N'
-    );
+--20260104status 컬럼 추가 : ALTER TABLE crr_hstr ADD COLUMN status char(2) NOT NULL DEFAULT '01';
 
+   CREATE TABLE public.crr_hstr (
+   	user_id varchar(255) NOT NULL,
+   	store_id int4 NOT NULL,
+   	crr_strt_date varchar(255) NOT NULL,
+   	crr_end_date varchar(255) NULL,
+   	auth_yn bool NOT NULL DEFAULT false,
+   	rgst_id varchar(255) NULL,
+   	rgst_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   	updt_id varchar(255) NULL,
+   	updt_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   	del_yn bool NOT NULL DEFAULT false,
+   	status bpchar(2) NOT NULL DEFAULT '01'::bpchar
+   );
 
     COMMENT ON TABLE CRR_HSTR IS '경력 테이블';
     COMMENT ON COLUMN CRR_HSTR.USER_ID       IS '회원 아이디';
@@ -187,6 +189,8 @@ COMMENT ON COLUMN user_info.user_phone_nm IS '회원 핸드폰번호';
     COMMENT ON COLUMN CRR_HSTR.UPDT_ID       IS '수정 아이디';
     COMMENT ON COLUMN CRR_HSTR.UPDT_DATE     IS '수정 날짜';
     COMMENT ON COLUMN CRR_HSTR.DEL_YN        IS '삭제 여부';
+    COMMENT ON COLUMN CRR_HSTR.STATUS        IS '경력 인증 상태';
+
 
 #회원 정보 insert문
 
