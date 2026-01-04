@@ -16,12 +16,12 @@ public class CrrHstrService {
     }
 
     // SELECT 1
-    public Optional<CrrHstrVo> getCrrHstr(Integer userId ,Integer storeId){
+    public Optional<CrrHstrVo> getCrrHstr(String userId ,Integer storeId){
         return crrHstrRepository.findById(new CrrHstrId(userId, storeId));
     }
 
     // UPDATE
-    public Optional<CrrHstrVo> updateCrrHstr(Integer userId, Integer storeId, CrrHstrVo updateCrrHstrVo){
+    public Optional<CrrHstrVo> updateCrrHstr(String userId, Integer storeId, CrrHstrVo updateCrrHstrVo){
         CrrHstrId id = new CrrHstrId(userId, storeId);
 
         return crrHstrRepository.findById(id)
@@ -35,7 +35,7 @@ public class CrrHstrService {
     }
 
     // DELETE
-    public boolean deleteCrrHstr(Integer userId, Integer storeId){
+    public boolean deleteCrrHstr(String userId, Integer storeId){
         CrrHstrId id = new CrrHstrId(userId, storeId);
 
         return crrHstrRepository.findById(id).map(post->{

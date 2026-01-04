@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class CrrHstrId implements Serializable {
 
-    private Integer userId;
+    private String userId;
     private Integer storeId;
 
     public CrrHstrId() {}
 
-    public CrrHstrId(Integer userId, Integer storeId) {
+    public CrrHstrId(String userId, Integer storeId) {
         this.userId = userId;
         this.storeId = storeId;
     }

@@ -34,10 +34,9 @@ public class CrrHstrController {
 */
     @GetMapping("/{userId}/{storeId}")
     @Operation(summary = "재직이력 조회", description = "userId와 storeId로 회원의 재직 이력을 조회합니다.")
-    public ResponseEntity<ApiResponse<CrrHstrVo>> getCrrHstr(@PathVariable Integer userId,
+    public ResponseEntity<ApiResponse<CrrHstrVo>> getCrrHstr(@PathVariable String userId,
                                                              @PathVariable Integer storeId) {
 
-        System.out.print("조회되냠냠쩝접");
         Optional<CrrHstrVo> crrHstrOpt = crrHstrService.getCrrHstr(userId, storeId);
 
         return crrHstrOpt
@@ -52,7 +51,7 @@ public class CrrHstrController {
     // UPDATE
     @PutMapping("/{userId}/{storeId}")
     @Operation(summary = "재직이력 수정", description = "userId와 storeId로 회원의 재직 이력을 수정합니다.")
-    public ResponseEntity<CrrHstrVo> updateCrrHstr(@PathVariable Integer userId
+    public ResponseEntity<CrrHstrVo> updateCrrHstr(@PathVariable String userId
                                                     ,@PathVariable Integer storeId
                                                     ,@RequestBody CrrHstrVo updateCrrHstrVo){
         Optional<CrrHstrVo> updated = crrHstrService.updateCrrHstr(userId, storeId, updateCrrHstrVo);
@@ -62,7 +61,7 @@ public class CrrHstrController {
     // DELETE
     @DeleteMapping("/{userId}/{storeId}")
     @Operation(summary = "재직이력 삭제", description = "userId와 storeId로 회원의 재직 이력을 삭제합니다.")
-    public ResponseEntity<Void> deleteCrrHstr(@PathVariable Integer userId
+    public ResponseEntity<Void> deleteCrrHstr(@PathVariable String userId
                                                 ,@PathVariable Integer storeId){
         boolean deleted = crrHstrService.deleteCrrHstr(userId, storeId);
         if(deleted){
