@@ -19,13 +19,11 @@ public interface ApplyRepository extends JpaRepository<ApplyInfo, Long> {
      * * @param hiringNo 조회할 공고의 ID
      * @return 해당 공고에 지원한 모든 지원자 목록
      */
-//    List<ApplyInfo> findByHiringNo(Long hiringNo);
 
-    // 만약 ApplyInfo 엔티티에 Hiring 엔티티 객체가 필드로 있다면 아래와 같이 사용 가능:
-//     List<ApplyInfo> findByHiringNo(ApplyService hiringNo);
-
-    @Query("SELECT b FROM ApplyInfo b " +
-            "JOIN FETCH b.userInfo " +
+    @Query("SELECT DISTINCT b FROM ApplyInfo b " +
+            "JOIN FETCH b.userInfo c " +
+            "LEFT JOIN FETCH c.crrHstrList d " +  // UserInfo에 있는 경력 리스트 (필드명 확인 필요)
+            "LEFT JOIN FETCH d.storeInfo e " +     // 경력 엔티티에 있는 매장 정보
             "WHERE b.hiringBoard.hiringNo = :hiringNo")
     List<ApplyInfo> findByHiringNoWithUserInfo(@Param("hiringNo") Long hiringNo);
 

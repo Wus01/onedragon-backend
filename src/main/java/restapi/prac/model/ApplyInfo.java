@@ -1,5 +1,6 @@
 package restapi.prac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -18,6 +19,7 @@ public class ApplyInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hiring_no")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applyList"})
+    @JsonIgnore
     private HiringBoard hiringBoard;
 
     @ManyToOne(fetch = FetchType.LAZY)

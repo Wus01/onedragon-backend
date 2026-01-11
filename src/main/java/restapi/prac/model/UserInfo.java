@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,4 +53,7 @@ public class UserInfo {
 
     @Transient
     private String token;
+
+    @OneToMany(mappedBy = "userInfo") // CrrHstr 엔티티에 있는 userInfo 필드와 매핑
+    private List<CrrHstrVo> crrHstrList = new ArrayList<>();
 }

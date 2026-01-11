@@ -1,5 +1,6 @@
 package restapi.prac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -36,7 +37,16 @@ public class CrrHstrVo extends BaseTimeEntity {
     private boolean delYn;
 
 
+    // 1. UserInfo와의 연결 (사용자 1명 : 경력 여러개)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // DB의 user_id 컬럼과 매핑
+    @JsonIgnore
+    private UserInfo userInfo;
 
+    // 2. StoreInfo와의 연결 (매장 1개 : 경력 여러개)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id") // DB의 store_id 컬럼과 매핑
+    private StoreDO storeInfo;
 
 
 
