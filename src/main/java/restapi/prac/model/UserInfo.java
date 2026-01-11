@@ -24,6 +24,9 @@ public class UserInfo {
     @Column
     private String userEmail;
 
+    @Column
+    private String userPhoneNm;
+
     @Column(nullable = false, length = 1)
     private String userDelYn;
 
