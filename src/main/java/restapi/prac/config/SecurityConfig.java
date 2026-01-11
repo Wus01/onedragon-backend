@@ -14,13 +14,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
+    // 비밀번호 인코딩
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -33,7 +34,8 @@ public class SecurityConfig {
                                 "/api/userInfo/findId",
                                 "/api/userInfo/findPw",
                                 "/api/mypage/**",
-                                "/api/crrHstr/**"
+                                "/api/crrHstr/**",
+                                "/api/hiring/**", "/api/apply/**"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
