@@ -3,7 +3,7 @@ package restapi.prac.model;
 import jakarta.persistence.*;
 
 @Entity
-public class Post {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -15,9 +15,9 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    public Post(){}
+    public PostEntity(){}
 
-    public Post(String title, String content){
+    public PostEntity(String title, String content){
         this.title = title;
         this.content = content;
     }

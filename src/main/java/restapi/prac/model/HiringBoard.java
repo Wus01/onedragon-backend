@@ -1,7 +1,6 @@
 package restapi.prac.model;
 
 import jakarta.persistence.*;
-import restapi.prac.controller.StoreInfoController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class HiringBoard {
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정 (성능 최적화)
     @JoinColumn(name = "store_id") // DB의 hiring_board 테이블에 있는 외래 키 컬럼 이름
-    private StoreDO storeInfo;
+    private StoreEntity storeInfo;
 
     // HiringBoard.java 에 추가
 
@@ -47,11 +46,11 @@ public class HiringBoard {
         this.applyList = applyList;
     }
 
-    public StoreDO getStoreInfo() {
+    public StoreEntity getStoreInfo() {
         return storeInfo;
     }
 
-    public void setStoreInfo(StoreDO storeInfo) {
+    public void setStoreInfo(StoreEntity storeInfo) {
         this.storeInfo = storeInfo;
     }
 

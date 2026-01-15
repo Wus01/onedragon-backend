@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restapi.prac.model.Post;
+import restapi.prac.model.PostEntity;
 import restapi.prac.service.PostService;
 
 import java.util.Optional;
@@ -25,30 +25,30 @@ public class PostController {
 
     // 리스트조회
     @GetMapping
-    public ResponseEntity<Page<Post>> listPost(@RequestParam(defaultValue = "0") int page,
-                                               @RequestParam(defaultValue = "10") int size){
+    public ResponseEntity<Page<PostEntity>> listPost(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size){
         Pageable pageable = PageRequest.of(page,size);
-        Page<Post> posts = postService.getPosts(pageable);
+        Page<PostEntity> posts = postService.getPosts(pageable);
         return ResponseEntity.ok().body(posts);
     }
     
     // 단건조회
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable Long id){
-        Optional<Post> postOpt = postService.getPost(id);
+    public ResponseEntity<PostEntity> getPost(@PathVariable Long id){
+        Optional<PostEntity> postOpt = postService.getPost(id);
         return postOpt.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
     // 생성
     @PostMapping
-    public ResponseEntity<Post> creatPost(@RequestBody Post post){
-        Post createdPost = postService.createPost(post);
-        return ResponseEntity.ok(createdPost);
+    public ResponseEntity<PostEntity> creatPost(@RequestBody PostEntity postEntity){
+        PostEntity createdPostEntity = postService.createPost(postEntity);
+        return ResponseEntity.ok(createdPostEntity);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post updatePost){
-        Optional<Post> updated = postService.updatePost(id, updatePost);
+    public ResponseEntity<PostEntity> updatePost(@PathVariable Long id, @RequestBody PostEntity updatePostEntity){
+        Optional<PostEntity> updated = postService.updatePost(id, updatePostEntity);
         return updated.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 

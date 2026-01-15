@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import restapi.prac.model.Post;
-import restapi.prac.model.StoreDO;
+import restapi.prac.model.StoreEntity;
 import restapi.prac.repository.StoreRepository;
 
 import java.util.List;
@@ -20,16 +19,16 @@ public class StoreService {
     }
 
     // 공고 전체 조회
-    public Page<StoreDO> getStores(Pageable pageable) {
+    public Page<StoreEntity> getStores(Pageable pageable) {
         return storeRepository.findAll(pageable);
     }
 
-    public StoreDO createStore(StoreDO storeDO) {
+    public StoreEntity createStore(StoreEntity storeEntity) {
         // storeDO 객체로 저장
-        return storeRepository.save(storeDO);
+        return storeRepository.save(storeEntity);
     }
 
-    public List<StoreDO> createStoreList(List<StoreDO> storeList) {
+    public List<StoreEntity> createStoreList(List<StoreEntity> storeList) {
         // storeDO 객체 리스트로 저장
         return storeRepository.saveAll(storeList);
     }

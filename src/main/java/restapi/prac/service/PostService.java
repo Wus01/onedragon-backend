@@ -3,10 +3,9 @@ package restapi.prac.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import restapi.prac.model.Post;
+import restapi.prac.model.PostEntity;
 import restapi.prac.repository.PostRepository;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -19,33 +18,33 @@ public class PostService {
     }
 
     // 전체조회
-    public Page<Post> getPosts(Pageable pageable) {
+    public Page<PostEntity> getPosts(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
 
     // 단건조회
-    public Optional<Post> getPost(Long id){
+    public Optional<PostEntity> getPost(Long id){
         return postRepository.findById(id);
     }
 
     // 저장
-    public Post createPost(Post post){
-        return postRepository.save(post);
+    public PostEntity createPost(PostEntity postEntity){
+        return postRepository.save(postEntity);
     }
 
     //  수정
-    public Optional<Post> updatePost(Long id, Post updatePost){
-        return postRepository.findById(id).map(post->{
-            post.setTitle(updatePost.getTitle());
-            post.setContent(updatePost.getContent());
-            return postRepository.save(post);
+    public Optional<PostEntity> updatePost(Long id, PostEntity updatePostEntity){
+        return postRepository.findById(id).map(postEntity ->{
+            postEntity.setTitle(updatePostEntity.getTitle());
+            postEntity.setContent(updatePostEntity.getContent());
+            return postRepository.save(postEntity);
         });
     }
 
     // 삭제
     public boolean deletePost(Long id){
-        return postRepository.findById(id).map(post->{
-            postRepository.delete(post);
+        return postRepository.findById(id).map(postEntity ->{
+            postRepository.delete(postEntity);
             return true;
         }).orElse(false);
     }
