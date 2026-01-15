@@ -46,7 +46,7 @@ public class CrrHstrVo extends BaseTimeEntity {
     // 2. StoreInfo와의 연결 (매장 1개 : 경력 여러개)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id") // DB의 store_id 컬럼과 매핑
-    private StoreDO storeInfo;
+    private StoreEntity storeInfo;
 
 
 
