@@ -35,7 +35,8 @@ public class SecurityConfig {
                                 "/api/userInfo/findPw",
                                 "/api/mypage/**",
                                 "/api/crrHstr/**",
-                                "/api/hiring/**", "/api/apply/**"
+                                "/api/hiring/**", "/api/apply/**",
+                                "/api/store/**"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
