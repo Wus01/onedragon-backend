@@ -3,6 +3,7 @@ package restapi.prac.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import restapi.prac.model.entity.UserInfoEntity;
 
 @Entity
 public class ApplyInfo {
@@ -25,7 +26,7 @@ public class ApplyInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"applyList", "handler", "hibernateLazyInitializer"}) // applyList 참조 차단
-    private UserInfo userInfo; // 지원한 유저 정보
+    private UserInfoEntity userInfo; // 지원한 유저 정보
 
     public HiringBoard getHiringBoard() {
         return hiringBoard;
@@ -35,11 +36,11 @@ public class ApplyInfo {
         this.hiringBoard = hiringBoard;
     }
 
-    public UserInfo getUserInfo() {
+    public UserInfoEntity getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
+    public void setUserInfo(UserInfoEntity userInfo) {
         this.userInfo = userInfo;
     }
 
