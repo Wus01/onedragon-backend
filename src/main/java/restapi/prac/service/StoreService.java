@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import restapi.prac.model.StoreEntity;
+import restapi.prac.model.entity.StoreEntity;
 import restapi.prac.repository.StoreRepository;
 
 import java.util.List;

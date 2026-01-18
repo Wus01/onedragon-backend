@@ -3,7 +3,7 @@ package restapi.prac.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import restapi.prac.model.PostEntity;
+import restapi.prac.model.entity.PostEntity;
 import restapi.prac.repository.PostRepository;
 
 import java.util.Optional;

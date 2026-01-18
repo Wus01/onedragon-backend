@@ -1,5 +1,6 @@
-package restapi.prac.model;
+package restapi.prac.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,8 +13,15 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class) // JPA Auditing 리스너 적용
 public class BaseTimeEntity {
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime rgstDate;
 
+    private String rgstId;
     @LastModifiedDate
     private LocalDateTime updtDate;
+    private String updtId;
+
+    public void setRgstId(String rgstId) { this.rgstId = rgstId; }
+    public void setUpdtId(String updtId) { this.updtId = updtId; }
 }
+

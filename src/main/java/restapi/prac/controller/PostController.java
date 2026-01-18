@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restapi.prac.model.PostEntity;
+import restapi.prac.model.entity.PostEntity;
 import restapi.prac.service.PostService;
 
 import java.util.Optional;

@@ -1,8 +1,9 @@
-package restapi.prac.model;
+package restapi.prac.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import restapi.prac.model.entity.CrrHstrEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,5 +59,5 @@ public class UserInfoEntity {
     private String token;
 
     @OneToMany(mappedBy = "userInfo") // CrrHstr 엔티티에 있는 userInfo 필드와 매핑
-    private List<CrrHstrVo> crrHstrList = new ArrayList<>();
+    private List<CrrHstrEntity> crrHstrList = new ArrayList<>();
 }

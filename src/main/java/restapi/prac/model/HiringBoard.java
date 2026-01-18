@@ -1,6 +1,7 @@
 package restapi.prac.model;
 
 import jakarta.persistence.*;
+import restapi.prac.model.entity.StoreEntity;
 
 import java.util.ArrayList;
 import java.util.List;

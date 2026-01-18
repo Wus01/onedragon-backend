@@ -1,4 +1,4 @@
-package restapi.prac.model;
+package restapi.prac.model.entity;
 
 import jakarta.persistence.*;
 
