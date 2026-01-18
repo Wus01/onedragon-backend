@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restapi.prac.model.UserInfo;
+import restapi.prac.model.UserInfoEntity;
 import restapi.prac.service.UserInfoService;
 
 import java.util.Map;
@@ -17,8 +17,8 @@ public class UserInfoController {
 
     // 회원가입 데이터 저장
     @PostMapping("/signup")
-    public ResponseEntity<UserInfo> createUserInfo(@RequestBody UserInfo userInfo){
-        UserInfo createUserInfo = userInfoService.createUserInfo(userInfo);
+    public ResponseEntity<UserInfoEntity> createUserInfo(@RequestBody UserInfoEntity userInfo){
+        UserInfoEntity createUserInfo = userInfoService.createUserInfo(userInfo);
         return ResponseEntity.ok(createUserInfo);
     }
 
@@ -29,7 +29,7 @@ public class UserInfoController {
         String userPwd = data.get("userPwd");
 
         try {
-            UserInfo user = userInfoService.login(userId, userPwd);
+            UserInfoEntity user = userInfoService.login(userId, userPwd);
             return ResponseEntity.ok(user);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));

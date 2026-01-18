@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class UserInfo {
+public class UserInfoEntity {
     @Id
     private String userId;
 

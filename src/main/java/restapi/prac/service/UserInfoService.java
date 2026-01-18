@@ -3,7 +3,7 @@ package restapi.prac.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import restapi.prac.model.UserInfo;
+import restapi.prac.model.UserInfoEntity;
 import restapi.prac.repository.UserInfoRepository;
 
 import java.util.Date;
@@ -19,7 +19,7 @@ public class UserInfoService {
     private final JwtService jwtService;
 
     // 저장
-    public UserInfo createUserInfo(UserInfo userInfo){
+    public UserInfoEntity createUserInfo(UserInfoEntity userInfo){
         // 등록일시, 등록아이디 세팅
         userInfo.setRgstDate(new Date());
         userInfo.setRgstId(userInfo.getUserId());
@@ -40,8 +40,8 @@ public class UserInfoService {
     }
 
     // 로그인
-    public UserInfo login(String userId, String rawPassword) {
-        UserInfo user = userInfoRepository.findByUserId(userId);
+    public UserInfoEntity login(String userId, String rawPassword) {
+        UserInfoEntity user = userInfoRepository.findByUserId(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
@@ -61,7 +61,7 @@ public class UserInfoService {
 
     // 아이디 찾기
     public String findId(String userEmail) {
-        UserInfo user = userInfoRepository.findByUserEmail(userEmail)
+        UserInfoEntity user = userInfoRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("해당 이메일로 등록된 아이디가 없습니다."));
 
         return user.getUserId();
@@ -69,7 +69,7 @@ public class UserInfoService {
 
     // 비밀번호 찾기
     public String findPw(String userId, String userEmail) {
-        UserInfo user = userInfoRepository.findByUserIdAndUserEmail(userId, userEmail)
+        UserInfoEntity user = userInfoRepository.findByUserIdAndUserEmail(userId, userEmail)
                 .orElseThrow(() -> new RuntimeException("입력하신 정보와 일치하는 계정이 없습니다."));
 
         // 임시 비밀번호 생성
