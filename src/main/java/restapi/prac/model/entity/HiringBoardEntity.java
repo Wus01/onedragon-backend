@@ -1,14 +1,13 @@
-package restapi.prac.model;
+package restapi.prac.model.entity;
 
 import jakarta.persistence.*;
-import restapi.prac.model.entity.StoreEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "hiring_board")
-public class HiringBoard {
+public class HiringBoardEntity {
     @Id
     private Long hiringNo;
     private Long hiringCnt;
@@ -36,14 +35,14 @@ public class HiringBoard {
 
     // HiringBoard.java 에 추가
 
-    @OneToMany(mappedBy = "hiringBoard") // ApplyInfo 엔티티에 있는 hiringBoard 필드에 의해 매핑됨
-    private List<ApplyInfo> applyList = new ArrayList<>();
+    @OneToMany(mappedBy = "hiringBoardEntity") // ApplyInfo 엔티티에 있는 hiringBoard 필드에 의해 매핑됨
+    private List<ApplyEntity> applyList = new ArrayList<>();
 
-    public List<ApplyInfo> getApplyList() {
+    public List<ApplyEntity> getApplyList() {
         return applyList;
     }
 
-    public void setApplyList(List<ApplyInfo> applyList) {
+    public void setApplyList(List<ApplyEntity> applyList) {
         this.applyList = applyList;
     }
 

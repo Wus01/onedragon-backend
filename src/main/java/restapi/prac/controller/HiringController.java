@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restapi.prac.model.HiringBoard;
+import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.service.HiringService;
 
 import java.util.Optional;
@@ -30,26 +30,27 @@ public class HiringController {
 
     // 공고 리스트 조회
     @GetMapping("/getHirings")
-    public ResponseEntity<Page<HiringBoard>> listStoreInfo(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "10") int size){
+    public ResponseEntity<Page<HiringBoardEntity>> listStoreInfo(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "10") int size){
         Pageable pageable = PageRequest.of(page,size);
-        Page<HiringBoard> stores = hiringService.getHirings(pageable);
+        Page<HiringBoardEntity> stores = hiringService.getHirings(pageable);
         return ResponseEntity.ok().body(stores);
     }
 
     // 상세보기를 위한 최종 코드
     @GetMapping("/{id}")
-    public ResponseEntity<HiringBoard> getPost(@PathVariable Long id){
+    public ResponseEntity<HiringBoardEntity> getPost(@PathVariable Long id){
         // 이 로그가 서버 콘솔에 찍히지 않았다면, Spring Data REST에 의해 요청이 가로채인 것입니다.
         // 해당 쿼리는 Service/Repository가 아닌 자동 생성된 엔드포인트에 의해 호출되었을 가능성이 높습니다.
         System.out.println("DEBUG: getPost 메서드 호출 시도. ID: " + id);
 
-        Optional<HiringBoard> hiringOpt = hiringService.getPost(id);
-
+        Optional<HiringBoardEntity> hiringOpt = hiringService.getPost(id);
+        System.out.println("조회됨###: " + hiringOpt.isPresent());
         // 이 로그가 찍힌다면 Service는 정상 호출된 것입니다.
         System.out.println("DEBUG: Service 호출 완료.");
         if (hiringOpt.isPresent()) {
             System.out.println("DEBUG: 데이터 발견, 200 OK 반환 예정");
+
             return ResponseEntity.ok(hiringOpt.get());
         } else {
             System.out.println("DEBUG: 데이터 없음, 404 Not Found 반환 예정");

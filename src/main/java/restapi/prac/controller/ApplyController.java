@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import restapi.prac.model.ApplyInfo;
+import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.service.ApplyService;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class ApplyController {
     private ApplyService applyService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApplyInfo> getPost(@PathVariable Long id){
+    public ResponseEntity<ApplyEntity> getPost(@PathVariable Long id){
         // 이 로그가 서버 콘솔에 찍히지 않았다면, Spring Data REST에 의해 요청이 가로채인 것입니다.
         // 해당 쿼리는 Service/Repository가 아닌 자동 생성된 엔드포인트에 의해 호출되었을 가능성이 높습니다.
         System.out.println("DEBUG: getPost 메서드 호출 시도. ID: " + id);
 
-        Optional<ApplyInfo> applyOpt = applyService.getPost(id);
+        Optional<ApplyEntity> applyOpt = applyService.getPost(id);
 
         // 이 로그가 찍힌다면 Service는 정상 호출된 것입니다.
         System.out.println("DEBUG: Service 호출 완료.");
@@ -57,8 +57,8 @@ public class ApplyController {
 //    }
 
     @GetMapping("/list/{hiringNo}")
-    public ResponseEntity<List<ApplyInfo>> getApplyListByHiringNo(@PathVariable Long hiringNo) {
-        List<ApplyInfo> applierList = applyService.getApplyListByHiringNo(hiringNo);
+    public ResponseEntity<List<ApplyEntity>> getApplyListByHiringNo(@PathVariable Long hiringNo) {
+        List<ApplyEntity> applierList = applyService.getApplyListByHiringNo(hiringNo);
 
         // 리스트가 비어있어도 ok(applierList)를 하면 프론트에 []가 가니까 괜찮습니다.
         // 로그는 찍어두면 디버깅할 때 아주 편해요!

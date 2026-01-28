@@ -1,12 +1,12 @@
-package restapi.prac.model;
+package restapi.prac.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import restapi.prac.model.entity.UserInfoEntity;
 
 @Entity
-public class ApplyInfo {
+@Table(name = "apply_info")
+public class ApplyEntity {
     @Id
     private Long applyNo;
     private String applyDate;
@@ -21,19 +21,19 @@ public class ApplyInfo {
     @JoinColumn(name = "hiring_no")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applyList"})
     @JsonIgnore
-    private HiringBoard hiringBoard;
+    private HiringBoardEntity hiringBoardEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"applyList", "handler", "hibernateLazyInitializer"}) // applyList 참조 차단
     private UserInfoEntity userInfo; // 지원한 유저 정보
 
-    public HiringBoard getHiringBoard() {
-        return hiringBoard;
+    public HiringBoardEntity getHiringBoardEntity() {
+        return hiringBoardEntity;
     }
 
-    public void setHiringBoard(HiringBoard hiringBoard) {
-        this.hiringBoard = hiringBoard;
+    public void setHiringBoardEntity(HiringBoardEntity hiringBoardEntity) {
+        this.hiringBoardEntity = hiringBoardEntity;
     }
 
     public UserInfoEntity getUserInfo() {
