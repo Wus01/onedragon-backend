@@ -20,3 +20,4 @@ public interface CrrHstrRepository extends JpaRepository<CrrHstrEntity, CrrHstrI
                                                   @Param("storeId") Integer storeId);
 
 }
+ 

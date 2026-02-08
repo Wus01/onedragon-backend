@@ -2,13 +2,19 @@ package restapi.prac.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import restapi.prac.model.CrrHstrId;
 
 @Entity
 @Table(name = "CRR_HSTR")
 @IdClass(CrrHstrId.class)
 @Data
+@Builder // 💡 빌더 패턴 사용 가능하게 함
+@NoArgsConstructor // 💡 JPA 필수 (기본 생성자)
+@AllArgsConstructor // 💡 @Builder 사용 시 모든 필드를 받는 생성자 필요
 public class CrrHstrEntity extends BaseTimeEntity {
 
     @Id
@@ -52,6 +58,7 @@ public class CrrHstrEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", insertable = false, updatable = false) // ✨ 수정: 읽기 전용으로 설정
     private StoreEntity storeInfo;
+
 
 
 }
