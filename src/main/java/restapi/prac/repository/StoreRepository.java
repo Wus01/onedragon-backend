@@ -11,5 +11,8 @@ public interface StoreRepository  extends JpaRepository<StoreEntity, Long> {
     // 지점 검색 list 조회
     Page<StoreEntity> findByStoreNmContaining(String storeNm, Pageable pageable);
 
+    // 주소로 포함 검색 (LIKE %keyword%)
+    Page<StoreEntity> findByStoreAddrContaining(String storeAddr, Pageable pageable);
+
 
 }

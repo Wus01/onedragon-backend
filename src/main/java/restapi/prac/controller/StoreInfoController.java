@@ -36,23 +36,23 @@ public class StoreInfoController {
         return ResponseEntity.ok(createStores);
     }
 
-    // 지점 검색 list 가져오기
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Map<String, Object>>> searchStores(
-            @RequestParam(required = false) String nm,
-            @RequestParam(defaultValue = "1") int page,  // 프론트에서 1번부터 보냄
+            @RequestParam(required = false) String type,    // nm 또는 addr
+            @RequestParam(required = false) String keyword, // 검색어
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        // 1. 서비스 호출 (Page 객체로 받는 것이 확장성에 좋음)
-        Page<StoreEntity> storePage = storeService.searchStoreByName(nm, page, size);
+        // 서비스 호출 시 type과 keyword를 함께 전달
+        Page<StoreEntity> storePage = storeService.searchStore(type, keyword, page, size);
 
-        // 2. 프론트엔드 Pagination 요구사항에 맞게 Map 구성
         Map<String, Object> result = new HashMap<>();
-        result.put("items", storePage.getContent());           // 현재 페이지 데이터 리스트
-        result.put("totalCount", storePage.getTotalElements()); // 전체 검색 결과 수
-        result.put("totalPages", storePage.getTotalPages());    // 전체 페이지 수
+        result.put("items", storePage.getContent());
+        result.put("totalCount", storePage.getTotalElements());
+        result.put("totalPages", storePage.getTotalPages());
 
         return ResponseEntity.ok(ApiResponse.ok(result));
     }
+
 
 }
