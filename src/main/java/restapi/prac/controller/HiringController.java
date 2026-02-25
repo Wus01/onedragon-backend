@@ -59,4 +59,21 @@ public class HiringController {
 
 //        return hiringOpt.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
+
+    /**
+     * 확정처리
+     */
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmHiring(@RequestBody Long id) {
+        try {
+            // 서비스 단의 업데이트 로직 실행
+            hiringService.confirmHiring(id);
+
+            // 성공 시 200 OK와 메시지 반환
+            return ResponseEntity.ok("성공적으로 확정되었습니다.");
+        } catch (Exception e) {
+            // 실패 시 500 에러와 에러 메시지 반환
+            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
+        }
+    }
 }

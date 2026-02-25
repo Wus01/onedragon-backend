@@ -1,9 +1,11 @@
 package restapi.prac.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import restapi.prac.model.entity.HiringBoardEntity;
 
 import java.util.Optional;
@@ -22,4 +24,18 @@ public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long>
             "WHERE h.hiringNo = :hiringNo")
     Optional<HiringBoardEntity> findDetailWithApplyAndUser(@Param("hiringNo") Long hiringNo);
 
+    @Modifying
+    @Transactional // 보통 서비스단에서 걸지만, 개별 테스트를 위해 리포지토리에도 명시 가능
+    @Query("update hiring_board set HIRING_STS='02' where HIRING_NO= :id")
+    int updateStatusHiringBoard(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("update apply_info\n" +
+            "  set apply_suc_yn='Y'\n" +
+            "    , updt_date = now()\n" +
+            "    , updt_id = #{user_id} -- 세션값이어야함\n" +
+            "where user_id=#{user_id}\n" +
+            "  and hiring_no #{hiring_no}")
+    int updateStatusApplyInfo(@Param("id") Long id);
 }
