@@ -1,6 +1,8 @@
 package restapi.prac.model.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +11,23 @@ import java.util.List;
 @Table(name = "hiring_board")
 public class HiringBoardEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hiringNo;
+    private String userId;
     private Long hiringCnt;
     private Long hiringLikeCnt;
-    private String delYn;
+
+    @Column(name = "del_yn")
+    private String delYn = "N"; // 객체 생성 시점에 바로 'N'으로 초기화
+
     private String hiringSts;
+
+    @CreationTimestamp // INSERT 시점에 현재 시간 자동 입력
     private String hiringDate;
+
+    @UpdateTimestamp // UPDATE 시점에 현재 시간 자동 입력
     private String hiringUpdtDate;
+
     private String serviceType;
     private String workStartDate;
     private String workEndDate;
@@ -24,8 +36,13 @@ public class HiringBoardEntity {
     private String hiringTitle;
     private String hiringText;
     private String payPerHour;
+
+    @CreationTimestamp
     private String rgstDate;
+
+    @UpdateTimestamp
     private String updtDate;
+
     private String rgstId;
     private String updtId;
 
@@ -56,6 +73,14 @@ public class HiringBoardEntity {
 
     public Long getHiringNo() {
         return hiringNo;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setHiringNo(Long hiringNo) {

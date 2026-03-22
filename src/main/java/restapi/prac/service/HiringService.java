@@ -27,17 +27,25 @@ public class HiringService {
         return hiringRepository.findByIdWithStoreInfo(id);
     }
 
-    @Transactional
-    public void confirmHiring(Long id) {
-        // 1. 첫 번째 업데이트 (공고 상태 변경)
-        int result1 = hiringRepository.updateStatusHiringBoard(id);
+    // repository 수정 후 아래 코드 수정 plz.
+    // 오류나서 일단 주석처리함.
+//    @Transactional
+//    public void confirmHiring(Long id) {
+//        // 1. 첫 번째 업데이트 (공고 상태 변경)
+//        int result1 = hiringRepository.updateStatusHiringBoard(id);
+//
+//        // 2. 두 번째 업데이트 (매장 활동 시간 갱신 등)
+//        int result2 = hiringRepository.updateStatusApplyInfo(id);
+//
+//        if (result1 == 0 || result2 == 0) {
+//            throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");
+//        }
+//    }
 
-        // 2. 두 번째 업데이트 (매장 활동 시간 갱신 등)
-        int result2 = hiringRepository.updateStatusApplyInfo(id);
-
-        if (result1 == 0 || result2 == 0) {
-            throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");
-        }
+    // 공고 등록
+    public HiringBoardEntity createHiring(HiringBoardEntity hiringEntity) {
+        // hiringBoardEntity 객체로 저장
+        return hiringRepository.save(hiringEntity);
     }
 
 }

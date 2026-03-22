@@ -63,17 +63,25 @@ public class HiringController {
     /**
      * 확정처리
      */
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirmHiring(@RequestBody Long id) {
-        try {
-            // 서비스 단의 업데이트 로직 실행
-            hiringService.confirmHiring(id);
+    // 26.03.23 오류나서 우선 주석처리(repository -> service -> controller 순으로 수정 plz)
+//    @PostMapping("/confirm")
+//    public ResponseEntity<?> confirmHiring(@RequestBody Long id) {
+//        try {
+//            // 서비스 단의 업데이트 로직 실행
+//            hiringService.confirmHiring(id);
+//
+//            // 성공 시 200 OK와 메시지 반환
+//            return ResponseEntity.ok("성공적으로 확정되었습니다.");
+//        } catch (Exception e) {
+//            // 실패 시 500 에러와 에러 메시지 반환
+//            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
+//        }
+//    }
 
-            // 성공 시 200 OK와 메시지 반환
-            return ResponseEntity.ok("성공적으로 확정되었습니다.");
-        } catch (Exception e) {
-            // 실패 시 500 에러와 에러 메시지 반환
-            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
-        }
+    // 공고 데이터 리스트 저장
+    @PostMapping("/add")
+    public ResponseEntity<HiringBoardEntity> createHiring(@RequestBody HiringBoardEntity hiringEntity){
+        HiringBoardEntity createHiring = hiringService.createHiring(hiringEntity);
+        return ResponseEntity.ok(createHiring);
     }
 }
