@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/api/userInfo/login",
                                 "/api/userInfo/findId",
                                 "/api/userInfo/findPw",
+                                "/api/userInfo/**",
                                 "/api/mypage/**",
                                 "/api/crrHstr/**",
                                 "/api/hiring/**", "/api/apply/**",
