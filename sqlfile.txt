@@ -206,7 +206,7 @@ VALUES
 	'test2','황원정','test2','test2@gmail.com','N','E','N',false,NULL,'2025-11-09 15:59:33.975',NULL,'test2',NULL
 ),
 (
-	'test3','곽혜진','test3','test3@gmail.com','N','E','N',false,NULL,'2025-11-09 16:20:04.453',NULL,'test3',NUL
+	'test3','곽혜진','test3','test3@gmail.com','N','E','N',false,NULL,'2025-11-09 16:20:04.453',NULL,'test3',NULL
 ),
 (
 	'test4','황지현','test4','test4@gmail.com','N','E','N',true,NULL,'2025-11-09 16:35:32.509',NULL,'test4',NULL
