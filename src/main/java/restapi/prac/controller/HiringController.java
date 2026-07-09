@@ -81,8 +81,14 @@ public class HiringController {
 
     // 공고 데이터 리스트 저장
     @PostMapping("/add")
-    public ResponseEntity<HiringBoardEntity> createHiring(@RequestBody HiringBoardEntity hiringEntity){
-        HiringBoardEntity createHiring = hiringService.createHiring(hiringEntity);
-        return ResponseEntity.ok(createHiring);
+    public ResponseEntity<?> createHiring(@RequestBody HiringBoardEntity hiringEntity){
+        try{
+            HiringBoardEntity createHiring = hiringService.createHiring(hiringEntity);
+
+            return ResponseEntity.ok("성공적으로 확정되었습니다.");
+        } catch (Exception e) {
+            // 실패 시 500 에러와 에러 메시지 반환
+            return ResponseEntity.status(500).body("지원 처리 중 오류 발생: " + e.getMessage());
+        }
     }
 }

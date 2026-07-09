@@ -2,11 +2,10 @@ package restapi.prac.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import restapi.prac.model.dto.response.ApplyDTO;
 import restapi.prac.model.entity.ApplyEntity;
+import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.service.ApplyService;
 
 import java.util.List;
@@ -67,4 +66,16 @@ public class ApplyController {
         return ResponseEntity.ok(applierList);
     }
 
+    // 지원하기
+    @PostMapping("/insertApply")
+    public ResponseEntity<?> insertApplyInfo(@RequestBody ApplyDTO applyDto){
+        System.out.println("APPLY CONTROLLER 진입 :: "+applyDto);
+        try {
+            ApplyEntity insertApplyInfo = applyService.insertApplyInfo(applyDto);
+            return ResponseEntity.ok("지원성공");
+        }catch (Exception e){
+            return ResponseEntity.status(500).body("지원 처리 중 오류 발생: " + e.getMessage());
+        }
+
+    }
 }

@@ -3,11 +3,22 @@ package restapi.prac.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "apply_info")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@DynamicInsert // insert 시 null인 필드는 제외하고 insert (그럼 default값으로 세팅돼서 들어감)
 public class ApplyEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long applyNo;
     private String applyDate;
     private String applySucYn;
@@ -24,7 +35,7 @@ public class ApplyEntity {
     private HiringBoardEntity hiringBoardEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "apply_user_id")
     @JsonIgnoreProperties({"applyList", "handler", "hibernateLazyInitializer"}) // applyList 참조 차단
     private UserInfoEntity userInfo; // 지원한 유저 정보
 
@@ -99,4 +110,5 @@ public class ApplyEntity {
     public void setUpdtId(String updtId) {
         this.updtId = updtId;
     }
+
 }
