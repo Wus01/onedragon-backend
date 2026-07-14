@@ -55,6 +55,8 @@ public class HiringBoardEntity {
     @OneToMany(mappedBy = "hiringBoardEntity") // ApplyInfo 엔티티에 있는 hiringBoard 필드에 의해 매핑됨
     private List<ApplyEntity> applyList = new ArrayList<>();
 
+
+
     public List<ApplyEntity> getApplyList() {
         return applyList;
     }

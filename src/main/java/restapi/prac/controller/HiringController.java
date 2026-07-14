@@ -1,5 +1,6 @@
 package restapi.prac.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * */
 @RestController
 @RequestMapping("api/hiring")
+@Slf4j
 public class HiringController {
     @Autowired
     private HiringService hiringService;
@@ -30,35 +32,50 @@ public class HiringController {
 //    }
 
     // 공고 리스트 조회
+//    @GetMapping("/getHirings")
+//    public ResponseEntity<Page<HiringBoardEntity>> listStoreInfo(@RequestParam(defaultValue = "0") int page,
+//                                                                 @RequestParam(defaultValue = "10") int size){
+//        Pageable pageable = PageRequest.of(page,size);
+//        Page<HiringBoardEntity> stores = hiringService.getHirings(pageable);
+//        return ResponseEntity.ok().body(stores);
+//    }
+
+    // 공고 리스트 조회
     @GetMapping("/getHirings")
-    public ResponseEntity<Page<HiringBoardEntity>> listStoreInfo(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size){
-        Pageable pageable = PageRequest.of(page,size);
-        Page<HiringBoardEntity> stores = hiringService.getHirings(pageable);
-        return ResponseEntity.ok().body(stores);
+    public ResponseEntity<Page<HiringBoardDTO>> getHiringList(Pageable pageable){
+        // repository에서 배열 형태로 데이터를 페이징 조회
+        Page<Object[]> result = hiringService.findAllWithCodeName(pageable);
+
+        // 결과 배열을 dto 구조로 변환
+        Page<HiringBoardDTO> dtoList = result.map(objects->{
+            HiringBoardEntity entity = (HiringBoardEntity) objects[0];
+            String dtlCdNm = (String) objects[1];
+            return new HiringBoardDTO(entity, dtlCdNm);
+        });
+
+        return ResponseEntity.ok().body(dtoList);
     }
 
     // 상세보기를 위한 최종 코드
     @GetMapping("/{id}")
-    public ResponseEntity<HiringBoardEntity> getPost(@PathVariable Long id){
+    public ResponseEntity<HiringBoardDTO> getPost(@PathVariable Long id){
         // 이 로그가 서버 콘솔에 찍히지 않았다면, Spring Data REST에 의해 요청이 가로채인 것입니다.
         // 해당 쿼리는 Service/Repository가 아닌 자동 생성된 엔드포인트에 의해 호출되었을 가능성이 높습니다.
-        System.out.println("DEBUG: getPost 메서드 호출 시도. ID: " + id);
+        log.debug("DEBUG: getPost 메서드 호출 시도. ID: " + id);
 
-        Optional<HiringBoardEntity> hiringOpt = hiringService.getPost(id);
-        System.out.println("조회됨###: " + hiringOpt.isPresent());
+        Optional<HiringBoardDTO> hiringOpt = hiringService.getPost(id);
+        log.info("조회됨###: " + hiringOpt.isPresent());
         // 이 로그가 찍힌다면 Service는 정상 호출된 것입니다.
-        System.out.println("DEBUG: Service 호출 완료.");
+        log.info("DEBUG: Service 호출 완료.");
+
         if (hiringOpt.isPresent()) {
-            System.out.println("DEBUG: 데이터 발견, 200 OK 반환 예정");
+            log.debug("DEBUG: 데이터 발견, 200 OK 반환 예정");
 
             return ResponseEntity.ok(hiringOpt.get());
         } else {
-            System.out.println("DEBUG: 데이터 없음, 404 Not Found 반환 예정");
+            log.error("DEBUG: 데이터 없음, 404 Not Found 반환 예정");
             return ResponseEntity.notFound().build();
         }
-
-//        return hiringOpt.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
     /**

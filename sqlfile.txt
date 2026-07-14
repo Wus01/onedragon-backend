@@ -211,3 +211,131 @@ VALUES
 (
 	'test4','황지현','test4','test4@gmail.com','N','E','N',true,NULL,'2025-11-09 16:35:32.509',NULL,'test4',NULL
 );
+
+-- 공통 코드 마스터 테이블
+CREATE TABLE CMN_CD_MSTR (
+    MSTR_CD VARCHAR(300) NOT NULL primary key,
+    MSTR_CD_NM VARCHAR(300) NOT NULL,
+    MSTR_CD_DS VARCHAR(300) NOT NULL,
+    DEL_YN VARCHAR(1) NOT NULL,
+    RGST_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    RGST_ID VARCHAR(100) NOT NULL,
+    UPDT_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UPDT_ID VARCHAR(100)
+);
+
+	COMMENT ON TABLE CMN_CD_MSTR IS '공통코드 마스터 테이블';
+
+    COMMENT ON COLUMN CMN_CD_MSTR.MSTR_CD IS '코드';
+	COMMENT ON COLUMN CMN_CD_MSTR.MSTR_CD_NM IS '코드 한글명';
+	COMMENT ON COLUMN CMN_CD_MSTR.MSTR_CD_DS IS '코드설명';
+	COMMENT ON COLUMN CMN_CD_MSTR.DEL_YN IS '삭제여부';
+	COMMENT ON COLUMN CMN_CD_MSTR.RGST_DATE IS '등록일시';
+	COMMENT ON COLUMN CMN_CD_MSTR.RGST_ID IS '등록아이디';
+	COMMENT ON COLUMN CMN_CD_MSTR.UPDT_DATE IS '수정일시';
+	COMMENT ON COLUMN CMN_CD_MSTR.UPDT_ID IS '수정아이디';
+
+-- 데이터 insert
+insert into CMN_CD_MSTR
+(
+MSTR_CD
+, MSTR_CD_NM
+, MSTR_CD_DS
+, DEL_YN
+, RGST_DATE
+, RGST_ID
+, UPDT_DATE
+, UPDT_ID
+)
+values(
+ 'HIRING_STS'
+, '공고상태'
+, '공고상태'
+, 'N'
+, now()
+, 'SYSTEM'
+, null
+, null
+ );
+
+commit;
+
+
+-- 공통 상세 코드 테이블
+CREATE TABLE CMN_CD_DTL (
+    DTL_CD VARCHAR(300) NOT null primary key,
+    MSTR_CD VARCHAR(300) NOT null references cmn_cd_mstr (mstr_cd) ,
+    DTL_CD_NM VARCHAR(300) NOT NULL,
+    DTL_CD_DS VARCHAR(300) NOT NULL,
+    DEL_YN VARCHAR(1) NOT NULL,
+    RGST_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    RGST_ID VARCHAR(100) NOT NULL,
+    UPDT_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UPDT_ID VARCHAR(100)
+);
+
+
+	COMMENT ON TABLE CMN_CD_DTL IS '공통코드 상세 테이블';
+
+    COMMENT ON COLUMN CMN_CD_DTL.DTL_CD IS '상세코드';
+	COMMENT ON COLUMN CMN_CD_DTL.MSTR_CD IS '마스터 코드';
+	COMMENT ON COLUMN CMN_CD_DTL.DTL_CD_NM IS '상세코드 한글명';
+	COMMENT ON COLUMN CMN_CD_DTL.DTL_CD_DS IS '상세코드설명';
+    COMMENT ON COLUMN CMN_CD_DTL.DEL_YN IS '삭제여부';
+	COMMENT ON COLUMN CMN_CD_DTL.RGST_DATE IS '등록일시';
+	COMMENT ON COLUMN CMN_CD_DTL.RGST_ID IS '등록아이디';
+	COMMENT ON COLUMN CMN_CD_DTL.UPDT_DATE IS '수정일시';
+	COMMENT ON COLUMN CMN_CD_DTL.UPDT_ID IS '수정아이디';
+
+	-- 데이터 insert
+	insert into CMN_CD_DTL
+    (
+    DTL_CD
+    , MSTR_CD
+    , DTL_CD_NM
+    , DTL_CD_DS
+    , DEL_YN
+    , RGST_DATE
+    , RGST_ID
+    , UPDT_DATE
+    , UPDT_ID
+    )
+    values(
+     '01'
+    , 'HIRING_STS'
+    , '미확정'
+    , '미확정'
+    , 'N'
+    , now()
+    , 'SYSTEM'
+    , null
+    , null
+     );
+
+    commit;
+
+    insert into CMN_CD_DTL
+    (
+    DTL_CD
+    , MSTR_CD
+    , DTL_CD_NM
+    , DTL_CD_DS
+    , DEL_YN
+    , RGST_DATE
+    , RGST_ID
+    , UPDT_DATE
+    , UPDT_ID
+    )
+    values(
+     '02'
+    , 'HIRING_STS'
+    , '확정'
+    , '확정'
+    , 'N'
+    , now()
+    , 'SYSTEM'
+    , null
+    , null
+     );
+
+    commit;

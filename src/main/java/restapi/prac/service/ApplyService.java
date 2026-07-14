@@ -22,12 +22,6 @@ public class ApplyService {
     private final HiringRepository hiringRepository;
     private final UserInfoRepository userInfoRepository;
 
-//    public ApplyService(ApplyRepository applyRepository){
-//        this.applyRepository = applyRepository;
-//    }
-
-
-
     //상세조회
     public Optional<ApplyEntity> getPost(Long id){
 

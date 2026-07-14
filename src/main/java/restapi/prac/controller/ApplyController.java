@@ -1,5 +1,6 @@
 package restapi.prac.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/apply")
+@Slf4j
 public class ApplyController {
     @Autowired
     private ApplyService applyService;
@@ -21,17 +23,17 @@ public class ApplyController {
     public ResponseEntity<ApplyEntity> getPost(@PathVariable Long id){
         // 이 로그가 서버 콘솔에 찍히지 않았다면, Spring Data REST에 의해 요청이 가로채인 것입니다.
         // 해당 쿼리는 Service/Repository가 아닌 자동 생성된 엔드포인트에 의해 호출되었을 가능성이 높습니다.
-        System.out.println("DEBUG: getPost 메서드 호출 시도. ID: " + id);
+        log.debug("DEBUG: getPost 메서드 호출 시도. ID: " + id);
 
         Optional<ApplyEntity> applyOpt = applyService.getPost(id);
 
         // 이 로그가 찍힌다면 Service는 정상 호출된 것입니다.
-        System.out.println("DEBUG: Service 호출 완료.");
+        log.info("DEBUG: Service 호출 완료.");
         if (applyOpt.isPresent()) {
-            System.out.println("DEBUG: 데이터 발견, 200 OK 반환 예정");
+            log.debug("DEBUG: 데이터 발견, 200 OK 반환 예정");
             return ResponseEntity.ok(applyOpt.get());
         } else {
-            System.out.println("DEBUG: 데이터 없음, 404 Not Found 반환 예정");
+            log.error("DEBUG: 데이터 없음, 404 Not Found 반환 예정");
             return ResponseEntity.notFound().build();
         }
 
@@ -61,7 +63,7 @@ public class ApplyController {
 
         // 리스트가 비어있어도 ok(applierList)를 하면 프론트에 []가 가니까 괜찮습니다.
         // 로그는 찍어두면 디버깅할 때 아주 편해요!
-        System.out.println("DEBUG: 공고번호 " + hiringNo + "의 지원자 수: " + applierList.size());
+        log.debug("DEBUG: 공고번호 " + hiringNo + "의 지원자 수: " + applierList.size());
 
         return ResponseEntity.ok(applierList);
     }
@@ -69,7 +71,6 @@ public class ApplyController {
     // 지원하기
     @PostMapping("/insertApply")
     public ResponseEntity<?> insertApplyInfo(@RequestBody ApplyDTO applyDto){
-        System.out.println("APPLY CONTROLLER 진입 :: "+applyDto);
         try {
             ApplyEntity insertApplyInfo = applyService.insertApplyInfo(applyDto);
             return ResponseEntity.ok("지원성공");

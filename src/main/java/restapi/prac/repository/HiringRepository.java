@@ -1,5 +1,7 @@
 package restapi.prac.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +17,11 @@ import java.util.Optional;
 public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long> {
 
     // JPQL을 사용하여 HiringBoard를 조회할 때 StoreInfo를 즉시 함께(EAGERLY) 가져옵니다.
-    @Query("SELECT DISTINCT h FROM HiringBoardEntity h JOIN FETCH h.storeInfo WHERE h.hiringNo = :id")
-    Optional<HiringBoardEntity> findByIdWithStoreInfo(@Param("id") Long id);
+    @Query("SELECT DISTINCT h, d.dtlCdNm FROM HiringBoardEntity h " +
+            "JOIN FETCH h.storeInfo " +
+            "JOIN CmnCdDtlEntity d ON h.hiringSts = d.dtlCd AND d.mstrCd = 'HIRING_STS' " +
+            "WHERE h.hiringNo = :id")
+    List<Object[]> findByIdWithStoreInfo(@Param("id") Long id);
 
     @Query("SELECT h FROM HiringBoardEntity h " +
             "JOIN FETCH h.storeInfo " + // 기존 상점 정보
@@ -24,11 +29,6 @@ public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long>
 //            "LEFT JOIN FETCH al.userInfo " + // 지원한 유저 정보
             "WHERE h.hiringNo = :hiringNo")
     Optional<HiringBoardEntity> findDetailWithApplyAndUser(@Param("hiringNo") Long hiringNo);
-
-//    @Modifying
-//    @Transactional // 보통 서비스단에서 걸지만, 개별 테스트를 위해 리포지토리에도 명시 가능
-//    @Query("update hiring_board set HIRING_STS='02' where HIRING_NO= :id")
-//    int updateStatusHiringBoard(@Param("id") Long id);
 
     @Modifying
     @Query(value = "UPDATE hiring_board SET " +
@@ -39,21 +39,6 @@ public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long>
             nativeQuery = true) // 이 옵션이 핵심입니다!
     int updateStatusHiringBoard(@Param("userId") String userId, @Param("hiringNo") Long hiringNo);
 
-    // 26.03.23 문법 오류나서 주석처리
-//    @Modifying
-//    @Transactional
-//    @Query("update apply_info" +
-//            "  set apply_suc_yn='Y'" +
-//            "    , updt_date = now()" +
-//            "    , updt_id = #{user_id} -- 세션값이어야함" +
-//            "where user_id=#{user_id}" +
-//            "  and hiring_no #{hiring_no}")
-//    int updateStatusApplyInfo(@Param("id") Long id, @Param("hiringNo") Long hiringNo );
-
-    // 26.03.23 위 코드를 수정한 내용임.
-    // service에서 인자 1개 넘기는데 로직 상 userId랑 hiringId가 필요해보임.
-    // 수정 plz.
-
     @Modifying
     @Query(value = "UPDATE apply_info " +
             "SET apply_suc_yn = 'Y', " +
@@ -62,4 +47,17 @@ public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long>
             "WHERE apply_no in (:applyNos) " +
             "  AND hiring_no = :hiringNo", nativeQuery = true)
     int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo);
+
+    Page<HiringBoardEntity> findAllByOrderByRgstDateDesc(Pageable pageable);
+
+    @Query(value="SELECT h, d.dtlCdNm \n" +
+               "FROM HiringBoardEntity h " +
+               "JOIN FETCH h.storeInfo " +
+               "JOIN CmnCdDtlEntity d ON h.hiringSts = d.dtlCd AND d.mstrCd = 'HIRING_STS'" +
+               "ORDER BY h.rgstDate DESC",
+            countQuery = "SELECT count(DISTINCT h) "  +
+                           "FROM HiringBoardEntity h " +
+                           "JOIN CmnCdDtlEntity d ON h.hiringSts = d.dtlCd " +
+                          "AND d.mstrCd = 'HIRING_STS'")
+    Page<Object[]> findAllWithCodeName(Pageable pageable);
 }
