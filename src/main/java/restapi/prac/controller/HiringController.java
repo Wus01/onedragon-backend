@@ -81,7 +81,6 @@ public class HiringController {
     /**
      * 확정처리
      */
-    // 26.03.23 오류나서 우선 주석처리(repository -> service -> controller 순으로 수정 plz)
     @PostMapping("/confirm")
     public ResponseEntity<?> confirmHiring(@RequestBody HiringBoardDTO hiringBoardDTO) {
         try {

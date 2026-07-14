@@ -53,8 +53,6 @@ public class HiringService {
         return Optional.of(new HiringBoardDTO(entity, dtlCdNm));
     }
 
-    // repository 수정 후 아래 코드 수정 plz.
-    // 오류나서 일단 주석처리함.
     @Transactional
     public void confirmHiring(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo) {
         // 1. 첫 번째 업데이트 (공고 상태 변경)

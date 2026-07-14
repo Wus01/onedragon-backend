@@ -1,6 +1,8 @@
 package restapi.prac.model.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import restapi.prac.model.entity.HiringBoardEntity;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor  // 1. Jackson이 바인딩할 때 쓸 기본 생성자 생성 (필수!)
+@AllArgsConstructor // 2. 전체 필드 생성자 생성
 public class HiringBoardDTO {
     private Long hiringNo;
     private String userId;
@@ -24,14 +28,15 @@ public class HiringBoardDTO {
     private String storeNm;
 
     public HiringBoardDTO(HiringBoardEntity entity, String dtlCdNm) {
-        this.hiringNo = entity.getHiringNo();
-        this.hiringTitle = entity.getHiringTitle();
-        this.hiringSts = entity.getHiringSts();
-        this.hiringStsNm = dtlCdNm;
-        this.hiringText = entity.getHiringText();
-        this.storeNm = entity.getStoreInfo() != null ? entity.getStoreInfo().getStoreNm() : "";
-        this.rgstId = entity.getRgstId();
-        this.rgstDate = entity.getRgstDate();
+        if(entity != null){
+            this.hiringNo = entity.getHiringNo();
+            this.hiringTitle = entity.getHiringTitle();
+            this.hiringSts = entity.getHiringSts();
+            this.hiringStsNm = dtlCdNm;
+            this.hiringText = entity.getHiringText();
+            this.storeNm = entity.getStoreInfo() != null ? entity.getStoreInfo().getStoreNm() : "";
+            this.rgstId = entity.getRgstId();
+            this.rgstDate = entity.getRgstDate();
+        }
     }
-
 }
