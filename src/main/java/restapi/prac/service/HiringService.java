@@ -54,12 +54,19 @@ public class HiringService {
     }
 
     @Transactional
-    public void confirmHiring(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo) {
+//    public void confirmHiring(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo) {
+    public void confirmHiring(HiringBoardDTO hiringBoardDTO) {
+        String userId = hiringBoardDTO.getUserId();
+        Long hiringNo = hiringBoardDTO.getHiringNo();
+        List<Long> applyNos = hiringBoardDTO.getApplyNos();
+        String hiringSts = hiringBoardDTO.getHiringSts();
+        String applySts = hiringBoardDTO.getApplySts();
+
         // 1. 첫 번째 업데이트 (공고 상태 변경)
         int result1 = hiringRepository.updateStatusHiringBoard(userId, hiringNo); //id만
 
         // 2. 두 번째 업데이트 (apply_info)
-        int result2 = hiringRepository.updateStatusApplyInfo(userId, applyNos, hiringNo); //id, hiringNo
+        int result2 = hiringRepository.updateStatusApplyInfo(userId, applyNos, hiringNo, applySts); //id, hiringNo
 
         if (result1 == 0 || result2 == 0) {
             throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");

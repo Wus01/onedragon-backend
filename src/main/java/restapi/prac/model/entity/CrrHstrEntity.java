@@ -8,9 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import restapi.prac.model.CrrHstrId;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "CRR_HSTR")
-@IdClass(CrrHstrId.class)
+//@IdClass(CrrHstrId.class)
 @Data
 @Builder // 💡 빌더 패턴 사용 가능하게 함
 @NoArgsConstructor // 💡 JPA 필수 (기본 생성자)
@@ -18,10 +21,14 @@ import restapi.prac.model.CrrHstrId;
 public class CrrHstrEntity extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CRR_HSTR_NO")
+    private Integer crrHstrNo;
+//    @Id
     @Column(name = "USER_ID")
     private String userId;
 
-    @Id
+//    @Id
     @Column(name = "STORE_ID")
     private Integer storeId;
 
@@ -46,6 +53,8 @@ public class CrrHstrEntity extends BaseTimeEntity {
     @Column(length = 2)
     private String status = "01"; // 자바 필드에서 초기화하는 것이 가장 안전합니다.
 
+    @Column(name="UPDT_DATE")
+    private LocalDateTime updtDate;
 
 
     // 1. UserInfo와의 연결

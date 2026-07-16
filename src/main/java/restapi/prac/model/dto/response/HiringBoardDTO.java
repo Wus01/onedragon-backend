@@ -26,6 +26,7 @@ public class HiringBoardDTO {
     private String workStartDate;
     private String workEndDate;
     private String storeNm;
+    private String applySts;
 
     public HiringBoardDTO(HiringBoardEntity entity, String dtlCdNm) {
         if(entity != null){
@@ -37,6 +38,8 @@ public class HiringBoardDTO {
             this.storeNm = entity.getStoreInfo() != null ? entity.getStoreInfo().getStoreNm() : "";
             this.rgstId = entity.getRgstId();
             this.rgstDate = entity.getRgstDate();
+            this.workStartDate = entity.getWorkStartDate();
+            this.workEndDate = entity.getWorkEndDate();
         }
     }
 }

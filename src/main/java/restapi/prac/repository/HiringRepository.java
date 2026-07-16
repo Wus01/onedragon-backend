@@ -43,10 +43,11 @@ public interface HiringRepository extends JpaRepository<HiringBoardEntity, Long>
     @Query(value = "UPDATE apply_info " +
             "SET apply_suc_yn = 'Y', " +
             "    updt_date = NOW(), " +
-            "    updt_id = :userId " +
+            "    updt_id = :userId, " +
+            "    apply_sts = :applySts "+
             "WHERE apply_no in (:applyNos) " +
             "  AND hiring_no = :hiringNo", nativeQuery = true)
-    int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo);
+    int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo, @Param("applySts") String applySts);
 
     Page<HiringBoardEntity> findAllByOrderByRgstDateDesc(Pageable pageable);
 

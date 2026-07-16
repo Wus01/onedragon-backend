@@ -2,10 +2,15 @@ package restapi.prac.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import restapi.prac.model.CrrHstrId;
+import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.CrrHstrEntity;
 import restapi.prac.model.dto.request.CrrHstrRequestDto;
 import restapi.prac.model.dto.response.CrrHstrResponseDto;
+import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.repository.CrrHstrRepository;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,51 +27,83 @@ public class CrrHstrService {
         return crrHstrRepository.findByIdWithStore(userId, storeId);
     }
 
+//    @Transactional
+//    public CrrHstrResponseDto updateCrrHstr(String userId, Integer oldStoreId, CrrHstrRequestDto dto) {
+//        // 1. 기존 데이터 조회 (URL 파라미터로 넘어온 예전 지점 ID 기준)
+//        CrrHstrEntity entity = crrHstrRepository.findById(new CrrHstrId(userId, oldStoreId))
+//                .orElseThrow(() -> new RuntimeException("수정할 데이터를 찾을 수 없습니다."));
+//
+//        // 2. 지점(storeId)이 변경된 경우 (PK가 바뀌는 상황)
+//        if (!oldStoreId.equals(dto.getStoreId())) {
+//            // A. 기존 PK 데이터 삭제 (JPA는 PK 수정을 지원하지 않으므로 삭제 후 재등록해야 함)
+//            crrHstrRepository.delete(entity);
+//
+//            // B. 새로운 PK를 가진 데이터 생성
+//            CrrHstrEntity newEntity = dto.toEntity(); // 앞서 만든 빌더 메서드 활용
+//            newEntity.setRgstId(entity.getRgstId());  // 등록자 정보 유지
+//            newEntity.setUpdtId(dto.getUserId());     // 수정자 정보 갱신
+//
+//            CrrHstrEntity saved = crrHstrRepository.save(newEntity);
+//
+//            // 새로운 데이터로 리턴 (여기서 끝내야 함)
+//            return CrrHstrResponseDto.from(saved);
+//        }
+//
+//        // 3. 지점이 그대로인 경우 (일반 필드만 수정)
+//        entity.setCrrStrtDate(dto.getCrrStrtDate());
+//        entity.setCrrEndDate(dto.getCrrEndDate());
+//        entity.setStatus(dto.getStatus());
+//        entity.setUpdtId(dto.getUserId());
+//
+//        return CrrHstrResponseDto.from(entity);
+//    }
+
     @Transactional
-    public CrrHstrResponseDto updateCrrHstr(String userId, Integer oldStoreId, CrrHstrRequestDto dto) {
-        // 1. 기존 데이터 조회 (URL 파라미터로 넘어온 예전 지점 ID 기준)
-        CrrHstrEntity entity = crrHstrRepository.findById(new CrrHstrId(userId, oldStoreId))
-                .orElseThrow(() -> new RuntimeException("수정할 데이터를 찾을 수 없습니다."));
+    public CrrHstrEntity updateCrrHstr(Long crrHstrNo, CrrHstrRequestDto dto) {
+        CrrHstrEntity crrHstr = crrHstrRepository.findById(crrHstrNo)
+                .orElseThrow(()-> new IllegalArgumentException("해당 경력 이력이 존재하지 않습니다. 번호: " + crrHstrNo));
 
-        // 2. 지점(storeId)이 변경된 경우 (PK가 바뀌는 상황)
-        if (!oldStoreId.equals(dto.getStoreId())) {
-            // A. 기존 PK 데이터 삭제 (JPA는 PK 수정을 지원하지 않으므로 삭제 후 재등록해야 함)
-            crrHstrRepository.delete(entity);
+        crrHstr.setStoreId(dto.getStoreId());
+        crrHstr.setCrrStrtDate(dto.getCrrStrtDate());
+        crrHstr.setCrrEndDate(dto.getCrrEndDate());
+        crrHstr.setUpdtId(dto.getUserId());
 
-            // B. 새로운 PK를 가진 데이터 생성
-            CrrHstrEntity newEntity = dto.toEntity(); // 앞서 만든 빌더 메서드 활용
-            newEntity.setRgstId(entity.getRgstId());  // 등록자 정보 유지
-            newEntity.setUpdtId(dto.getUserId());     // 수정자 정보 갱신
-
-            CrrHstrEntity saved = crrHstrRepository.save(newEntity);
-
-            // 새로운 데이터로 리턴 (여기서 끝내야 함)
-            return CrrHstrResponseDto.from(saved);
-        }
-
-        // 3. 지점이 그대로인 경우 (일반 필드만 수정)
-        entity.setCrrStrtDate(dto.getCrrStrtDate());
-        entity.setCrrEndDate(dto.getCrrEndDate());
-        entity.setStatus(dto.getStatus());
-        entity.setUpdtId(dto.getUserId());
-
-        return CrrHstrResponseDto.from(entity);
+        return crrHstr;
     }
     // DELETE
-    @Transactional
-    public CrrHstrResponseDto deleteCrrHstr(String userId, Integer storeId, CrrHstrRequestDto dto) {
-        // 1. 기존 데이터 조회
-        CrrHstrEntity entity = crrHstrRepository.findByIdWithStore(userId, storeId)
-                .orElseThrow(() -> new RuntimeException("삭제할 데이터를 찾을 수 없습니다."));
+//    @Transactional
+//    public CrrHstrResponseDto deleteCrrHstr(String userId, Integer storeId, CrrHstrRequestDto dto) {
+//        // 1. 기존 데이터 조회
+//        CrrHstrEntity entity = crrHstrRepository.findByIdWithStore(userId, storeId)
+//                .orElseThrow(() -> new RuntimeException("삭제할 데이터를 찾을 수 없습니다."));
+//
+//        // 2. 논리 삭제 처리 (Soft Delete)
+//        entity.setDelYn(true); // 또는 "Y" (DB 타입에 맞춰 설정)
+//
+//        // 3. 수정자 정보 업데이트 (리액트 로컬스토리지에서 넘어온 ID 사용)
+//        entity.setUpdtId(dto.getUserId());
+//
+//        // 4. Dirty Checking에 의해 트랜잭션 종료 시 자동으로 Update 쿼리가 실행됨
+//        return CrrHstrResponseDto.from(entity);
+//    }
 
-        // 2. 논리 삭제 처리 (Soft Delete)
+    // 삭제
+    @Transactional
+    public void deleteCrrHstr(Long crrHstrNo, CrrHstrRequestDto dto) {
+        // 1. 기존 데이터 조회
+        CrrHstrEntity entity = crrHstrRepository.findById(crrHstrNo)
+                .orElseThrow(() -> new IllegalArgumentException("삭제할 데이터를 찾을 수 없습니다."));
+
         entity.setDelYn(true); // 또는 "Y" (DB 타입에 맞춰 설정)
 
-        // 3. 수정자 정보 업데이트 (리액트 로컬스토리지에서 넘어온 ID 사용)
         entity.setUpdtId(dto.getUserId());
 
-        // 4. Dirty Checking에 의해 트랜잭션 종료 시 자동으로 Update 쿼리가 실행됨
-        return CrrHstrResponseDto.from(entity);
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+//        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String formattedDate = now.format(formatter);
+
+        entity.setUpdtDate(now);
+
     }
 
     // INSERT
@@ -94,6 +131,17 @@ public class CrrHstrService {
         return CrrHstrResponseDto.from(savedEntity);
     }
 
+    // 마이페이지 내 경력 목록 조회
 
+    public Optional<CrrHstrEntity> selectMyCrrHstrList(String userId){
+        return crrHstrRepository.selectMyCrrHstrList(userId);
+    }
+
+    // 경력페이지 경력 상세 조회
+    @Transactional(readOnly = true)
+    public CrrHstrEntity selectOneCrrHstr(Long crrHstrNo){
+        return crrHstrRepository.findById(crrHstrNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 경력 상세 정보가 존재하지 않습니다. 번호: " + crrHstrNo));
+    }
 
 }

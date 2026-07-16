@@ -165,6 +165,7 @@ COMMENT ON COLUMN user_info.user_phone_nm IS '회원 핸드폰번호';
 --20260104status 컬럼 추가 : ALTER TABLE crr_hstr ADD COLUMN status char(2) NOT NULL DEFAULT '01';
 
    CREATE TABLE public.crr_hstr (
+    crr_hstr_no BIGSERIAL PRIMARY KEY,
    	user_id varchar(255) NOT NULL,
    	store_id int4 NOT NULL,
    	crr_strt_date varchar(255) NOT NULL,
@@ -176,6 +177,15 @@ COMMENT ON COLUMN user_info.user_phone_nm IS '회원 핸드폰번호';
    	updt_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    	del_yn bool NOT NULL DEFAULT false,
    	status bpchar(2) NOT NULL DEFAULT '01'::bpchar
+
+   	CONSTRAINT fk_crr_hstr_user FOREIGN KEY (user_id)
+            REFERENCES user_info (user_id)
+            ON DELETE CASCADE
+
+    CONSTRAINT fk_crr_hstr_store
+            FOREIGN KEY (store_id)
+            REFERENCES store_info(store_id)
+            ON DELETE CASCADE,
    );
 
     COMMENT ON TABLE CRR_HSTR IS '경력 테이블';
@@ -260,18 +270,48 @@ values(
 
 commit;
 
+insert into CMN_CD_MSTR
+(
+MSTR_CD
+, MSTR_CD_NM
+, MSTR_CD_DS
+, DEL_YN
+, RGST_DATE
+, RGST_ID
+, UPDT_DATE
+, UPDT_ID
+)
+values(
+ 'APPLY_STS'
+, '지원상태'
+, '지원상태'
+, 'N'
+, now()
+, 'SYSTEM'
+, null
+, null
+ );
+
+commit;
+
 
 -- 공통 상세 코드 테이블
 CREATE TABLE CMN_CD_DTL (
-    DTL_CD VARCHAR(300) NOT null primary key,
-    MSTR_CD VARCHAR(300) NOT null references cmn_cd_mstr (mstr_cd) ,
+    DTL_CD VARCHAR(300) NOT null,
+    MSTR_CD VARCHAR(300) NOT null,
     DTL_CD_NM VARCHAR(300) NOT NULL,
     DTL_CD_DS VARCHAR(300) NOT NULL,
-    DEL_YN VARCHAR(1) NOT NULL,
+    DEL_YN VARCHAR(1) NOT NULL DEFAULT 'N',
     RGST_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     RGST_ID VARCHAR(100) NOT NULL,
     UPDT_DATE TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UPDT_ID VARCHAR(100)
+    UPDT_ID VARCHAR(100),
+
+    PRIMARY KEY (mstr_cd, dtl_cd),
+
+    CONSTRAINT fk_dtl_mstr FOREIGN KEY (mstr_cd)
+        REFERENCES cmn_cd_mstr (mstr_cd)
+        ON DELETE CASCADE
 );
 
 
@@ -339,3 +379,57 @@ CREATE TABLE CMN_CD_DTL (
      );
 
     commit;
+
+    insert into CMN_CD_DTL
+    (
+    DTL_CD
+    , MSTR_CD
+    , DTL_CD_NM
+    , DTL_CD_DS
+    , DEL_YN
+    , RGST_DATE
+    , RGST_ID
+    , UPDT_DATE
+    , UPDT_ID
+    )
+    values(
+     '01'
+    , 'APPLY_STS'
+    , '지원완료'
+    , '지원완료'
+    , 'N'
+    , now()
+    , 'SYSTEM'
+    , null
+    , null
+     );
+
+    commit;
+
+
+
+insert into CMN_CD_DTL
+(
+DTL_CD
+, MSTR_CD
+, DTL_CD_NM
+, DTL_CD_DS
+, DEL_YN
+, RGST_DATE
+, RGST_ID
+, UPDT_DATE
+, UPDT_ID
+)
+values(
+ '04'
+, 'APPLY_STS'
+, '최종합격'
+, '최종합격'
+, 'N'
+, now()
+, 'SYSTEM'
+, null
+, null
+ );
+
+commit;

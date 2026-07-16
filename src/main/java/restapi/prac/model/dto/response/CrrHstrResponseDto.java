@@ -1,11 +1,9 @@
 package restapi.prac.model.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import restapi.prac.model.entity.CrrHstrEntity;
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +16,8 @@ public class CrrHstrResponseDto {
     private boolean authYn;
     private String status;       // "01", "02" 등 코드값
     private String statusName;   // "인증 대기", "인증 완료" 등 한글명
+    private Integer crrHstrNo;
+    private String updtId;
 
     // Entity -> DTO 변환 정적 메서드
     public static CrrHstrResponseDto from(CrrHstrEntity entity) {

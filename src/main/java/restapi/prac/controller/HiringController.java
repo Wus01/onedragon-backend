@@ -59,18 +59,10 @@ public class HiringController {
     // 상세보기를 위한 최종 코드
     @GetMapping("/{id}")
     public ResponseEntity<HiringBoardDTO> getPost(@PathVariable Long id){
-        // 이 로그가 서버 콘솔에 찍히지 않았다면, Spring Data REST에 의해 요청이 가로채인 것입니다.
-        // 해당 쿼리는 Service/Repository가 아닌 자동 생성된 엔드포인트에 의해 호출되었을 가능성이 높습니다.
-        log.debug("DEBUG: getPost 메서드 호출 시도. ID: " + id);
-
         Optional<HiringBoardDTO> hiringOpt = hiringService.getPost(id);
-        log.info("조회됨###: " + hiringOpt.isPresent());
-        // 이 로그가 찍힌다면 Service는 정상 호출된 것입니다.
-        log.info("DEBUG: Service 호출 완료.");
 
         if (hiringOpt.isPresent()) {
             log.debug("DEBUG: 데이터 발견, 200 OK 반환 예정");
-
             return ResponseEntity.ok(hiringOpt.get());
         } else {
             log.error("DEBUG: 데이터 없음, 404 Not Found 반환 예정");
@@ -85,8 +77,8 @@ public class HiringController {
     public ResponseEntity<?> confirmHiring(@RequestBody HiringBoardDTO hiringBoardDTO) {
         try {
             // 서비스 단의 업데이트 로직 실행
-            hiringService.confirmHiring(hiringBoardDTO.getUserId(), hiringBoardDTO.getApplyNos(), hiringBoardDTO.getHiringNo());
-
+//            hiringService.confirmHiring(hiringBoardDTO.getUserId(), hiringBoardDTO.getApplyNos(), hiringBoardDTO.getHiringNo());
+            hiringService.confirmHiring(hiringBoardDTO);
             // 성공 시 200 OK와 메시지 반환
             return ResponseEntity.ok("성공적으로 확정되었습니다.");
         } catch (Exception e) {

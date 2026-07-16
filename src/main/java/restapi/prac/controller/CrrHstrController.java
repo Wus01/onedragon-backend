@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restapi.prac.common.ApiResponse;
+import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.CrrHstrEntity;
 import restapi.prac.model.dto.request.CrrHstrRequestDto;
 import restapi.prac.model.dto.response.CrrHstrResponseDto;
@@ -44,27 +45,36 @@ public class CrrHstrController {
 
 
 
-    @PutMapping("/{userId}/{storeId}")
-    public ResponseEntity<ApiResponse<CrrHstrResponseDto>> updateCrrHstr(
-            @PathVariable String userId,
-            @PathVariable Integer storeId,
-            @RequestBody CrrHstrRequestDto dto) {
+//    @PutMapping("/{userId}/{storeId}")
+//    public ResponseEntity<ApiResponse<CrrHstrResponseDto>> updateCrrHstr(
+//            @PathVariable String userId,
+//            @PathVariable Integer storeId,
+//            @RequestBody CrrHstrRequestDto dto) {
+//
+//        // 서비스 호출하여 수정된 결과 DTO를 받음
+//        CrrHstrResponseDto updatedData = crrHstrService.updateCrrHstr(userId, storeId, dto);
+//        return ResponseEntity.ok(ApiResponse.ok(updatedData));
+//    }
 
+    @PutMapping("/update/{crrHstrNo}")
+    public ResponseEntity<CrrHstrEntity> updateCrrHstr(
+            @PathVariable Long crrHstrNo,
+            @RequestBody CrrHstrRequestDto dto) {
+//        Long crrHstrNo = pathCrrHstrNo;
         // 서비스 호출하여 수정된 결과 DTO를 받음
-        CrrHstrResponseDto updatedData = crrHstrService.updateCrrHstr(userId, storeId, dto);
-        return ResponseEntity.ok(ApiResponse.ok(updatedData));
+        CrrHstrEntity updatedData = crrHstrService.updateCrrHstr(crrHstrNo, dto);
+        return ResponseEntity.ok(updatedData);
     }
 
     // DELETE
-    @DeleteMapping("/{userId}/{storeId}")
-    public ResponseEntity<ApiResponse<CrrHstrResponseDto>> deleteCrrHstr(
-            @PathVariable String userId,
-            @PathVariable Integer storeId,
+    @DeleteMapping("/delete/{crrHstrNo}")
+    public ResponseEntity<String> deleteCrrHstr(
+            @PathVariable Long crrHstrNo,
             @RequestBody CrrHstrRequestDto dto) { // DTO를 통해 로컬스토리지의 userId 수신
 
-        CrrHstrResponseDto deletedInfo = crrHstrService.deleteCrrHstr(userId, storeId, dto);
+        crrHstrService.deleteCrrHstr(crrHstrNo, dto);
 
-        return ResponseEntity.ok(ApiResponse.ok(deletedInfo));
+        return ResponseEntity.ok("삭제 완료");
     }
 
     // INSERT
@@ -75,5 +85,34 @@ public class CrrHstrController {
         CrrHstrResponseDto createdPost = crrHstrService.createCrrHstr(dto);
         return ResponseEntity.ok(createdPost);
     }
+
+    // 마이페이지 내 경력목록 조회(다건)
+    @GetMapping("/{userId}")
+    @Operation(summary = "재직이력 조회", description = "userId로 회원의 재직 이력을 조회합니다.")
+    public ResponseEntity<ApiResponse<CrrHstrResponseDto>> selectMyCrrHstrList(@PathVariable String userId) {
+        Optional<CrrHstrEntity> crrHstrOpt = crrHstrService.selectMyCrrHstrList(userId);
+
+        // 2. DTO 변환 및 응답
+        return crrHstrOpt
+                .map(entity -> {
+                    CrrHstrResponseDto responseDto = CrrHstrResponseDto.from(entity);
+                    return ResponseEntity.ok(ApiResponse.ok(responseDto));
+                })
+                .orElseGet(() -> ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("재직 이력이 없습니다.")));
+    }
+
+    // 경력 페이지 단건 조회
+    @GetMapping("/select/{crrHstrNo}")
+    @Operation(summary = "재직이력 상세 조회", description = "crrHstrNo로 회원의 재직 이력 상세를 조회합니다.")
+    public ResponseEntity<CrrHstrEntity> selectOneCrrHstr(@PathVariable Long crrHstrNo) {
+
+        CrrHstrEntity crrHstrEntity = crrHstrService.selectOneCrrHstr(crrHstrNo);
+
+        return ResponseEntity.ok(crrHstrEntity);
+
+    }
+
 }
 

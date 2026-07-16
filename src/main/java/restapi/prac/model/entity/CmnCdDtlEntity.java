@@ -1,11 +1,11 @@
 package restapi.prac.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "CMN_CD_DTL")
+
 public class CmnCdDtlEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String dtlCd;
+    @Id
     private String mstrCd;
     private String dtlCdNm;
     private String dtlCdDs;
@@ -33,6 +34,12 @@ public class CmnCdDtlEntity {
     private String rgstId;
     private String updtId;
 
-
+    @EqualsAndHashCode
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class CmnCdDtlId implements Serializable {
+        private String mstrCd;
+        private String dtlCd;
+    }
 
 }
