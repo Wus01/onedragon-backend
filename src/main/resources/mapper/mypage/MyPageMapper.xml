@@ -20,4 +20,45 @@
 
     </select>
 
+    <select id="selectMyApplyList"  parameterType="string"  resultType="restapi.prac.model.dto.response.ApplyDTO">
+        /* selectMyApplyList */
+        select ai.apply_date AS applyDate
+             , ai.apply_sts AS applySts
+             , ai.apply_suc_yn AS applySucYn
+             , si.store_nm AS storeNm
+             , hb.hiring_no AS hiringNo
+             , ccd.dtl_cd_nm as  applyStsNm
+             , ccd2.dtl_cd_nm as hiringStsNm
+        from apply_info ai
+        join hiring_board hb
+        on ai.hiring_no = hb.hiring_no
+        join store_info si
+        on hb.store_id = si.store_id
+        left join cmn_cd_dtl ccd
+        on ccd.dtl_cd = ai.apply_sts
+        and ccd.mstr_cd = 'APPLY_STS'
+        left join cmn_cd_dtl ccd2
+        on ccd2.dtl_cd = hb.hiring_sts
+        and ccd2.mstr_cd = 'HIRING_STS'
+        where 1=1
+        and ai.apply_user_id = #{userId}
+    </select>
+
+    <select id="selectMyHiringList"  parameterType="string"  resultType="restapi.prac.model.dto.response.HiringBoardDTO">
+        /* selectMyHiringList */
+        select si.store_nm AS storeNm
+             , hb.hiring_no AS hiringNo
+             , ccd2.dtl_cd_nm AS hiringStsNm
+             , hb.work_start_date AS workStartDate
+             , hb.work_end_date AS workEndDate
+        from hiring_board hb
+        join store_info si
+        on hb.store_id = si.store_id
+        left join cmn_cd_dtl ccd2
+        on ccd2.dtl_cd = hb.hiring_sts
+        and ccd2.mstr_cd = 'HIRING_STS'
+        where 1=1
+        and hb.rgst_id = #{userId}
+    </select>
+
 </mapper>
