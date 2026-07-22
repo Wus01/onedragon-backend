@@ -31,7 +31,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/store/**").permitAll()
                         .requestMatchers(
                                 "/api/userInfo/login",
                                 "/api/userInfo/findId",
@@ -39,8 +38,8 @@ public class SecurityConfig {
                                 "/api/userInfo/**",
                                 "/api/mypage/**",
                                 "/api/crrHstr/**",
-                                "/api/hiring/**", "/api/apply/**"
-//                                "/api/store/**"
+                                "/api/hiring/**", "/api/apply/**",
+                                "/api/store/**"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
@@ -54,16 +53,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowedOrigins(List.of("http://localhost:3000",
-//                "https://onedragon-web.vercel.app")); // 리액트 주소
-//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        config.setAllowedHeaders(List.of("*"));
-//        config.setAllowCredentials(true);
-
-        // 테스트 동안은 모든 출처 허용
-        config.addAllowedOriginPattern("*");
-        config.addAllowedMethod("*"); // GET, POST, PUT, DELETE, OPTIONS 등 전체 허용
-        config.addAllowedHeader("*"); // 모든 헤더 허용
+        config.setAllowedOrigins(List.of("http://localhost:3000",
+                "https://onedragon-web.vercel.app")); // 리액트 주소
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
