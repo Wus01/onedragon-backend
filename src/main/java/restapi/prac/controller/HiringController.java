@@ -17,7 +17,7 @@ import java.util.Optional;
  * RESTful API 설계 원칙에 따라, 기존 리소스를 생성(Create)할 때는 POST, 조회(Read)할 때는 GET, 수정(Update)할 때는 PUT 또는 PATCH, 삭제(Delete)할 때는 DELETE 메서드를 사용하는 것이 일반적입니다.
  * */
 @RestController
-@RequestMapping("api/hiring")
+@RequestMapping("/api/hiring")
 @Slf4j
 public class HiringController {
     @Autowired
@@ -70,22 +70,22 @@ public class HiringController {
         }
     }
 
-    /**
-     * 확정처리
-     */
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirmHiring(@RequestBody HiringBoardDTO hiringBoardDTO) {
-        try {
-            // 서비스 단의 업데이트 로직 실행
-//            hiringService.confirmHiring(hiringBoardDTO.getUserId(), hiringBoardDTO.getApplyNos(), hiringBoardDTO.getHiringNo());
-            hiringService.confirmHiring(hiringBoardDTO);
-            // 성공 시 200 OK와 메시지 반환
-            return ResponseEntity.ok("성공적으로 확정되었습니다.");
-        } catch (Exception e) {
-            // 실패 시 500 에러와 에러 메시지 반환
-            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
-        }
-    }
+//    /**
+//     * 확정처리
+//     */
+//    @PostMapping("/confirm")
+//    public ResponseEntity<?> confirmHiring(@RequestBody HiringBoardDTO hiringBoardDTO) {
+//        try {
+//            // 서비스 단의 업데이트 로직 실행
+////            hiringService.confirmHiring(hiringBoardDTO.getUserId(), hiringBoardDTO.getApplyNos(), hiringBoardDTO.getHiringNo());
+//            hiringService.confirmHiring(hiringBoardDTO);
+//            // 성공 시 200 OK와 메시지 반환
+//            return ResponseEntity.ok("성공적으로 확정되었습니다.");
+//        } catch (Exception e) {
+//            // 실패 시 500 에러와 에러 메시지 반환
+//            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
+//        }
+//    }
 
     // 공고 데이터 리스트 저장
     @PostMapping("/add")

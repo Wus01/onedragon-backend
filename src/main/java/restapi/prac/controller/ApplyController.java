@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.dto.response.ApplyDTO;
+import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.service.ApplyService;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/apply")
+@RequestMapping("/api/apply")
 @Slf4j
 public class ApplyController {
     @Autowired
@@ -78,5 +79,20 @@ public class ApplyController {
             return ResponseEntity.status(500).body("지원 처리 중 오류 발생: " + e.getMessage());
         }
 
+    }
+
+    /**
+     * 확정처리
+     */
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmApply(@RequestBody HiringBoardDTO hiringBoardDTO) {
+        try {
+            // 서비스 단의 업데이트 로직 실행
+            applyService.confirmApply(hiringBoardDTO);
+
+            return ResponseEntity.ok("성공적으로 확정되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
+        }
     }
 }

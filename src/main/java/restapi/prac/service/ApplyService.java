@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import restapi.prac.model.dto.response.ApplyDTO;
+import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.model.entity.UserInfoEntity;
@@ -52,5 +53,25 @@ public class ApplyService {
                 .userInfo(userInfo)
                 .build();
         return applyRepository.save(applyInfo);
+    }
+
+    // 지원자 확정
+    @Transactional
+    public void confirmApply(HiringBoardDTO hiringBoardDTO) {
+        String userId = hiringBoardDTO.getUserId();
+        Long hiringNo = hiringBoardDTO.getHiringNo();
+        List<Long> applyNos = hiringBoardDTO.getApplyNos();
+        String hiringSts = hiringBoardDTO.getHiringSts();
+        String applySts = hiringBoardDTO.getApplySts();
+
+        // 1. 첫 번째 업데이트 (공고 상태 변경)
+        int result1 = applyRepository.updateStatusHiringBoard(userId, hiringNo); //id만
+
+        // 2. 두 번째 업데이트 (apply_info)
+        int result2 = applyRepository.updateStatusApplyInfo(userId, applyNos, hiringNo, applySts); //id, hiringNo
+
+        if (result1 == 0 || result2 == 0) {
+            throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package restapi.prac.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,22 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
             "WHERE b.hiringBoardEntity.hiringNo = :hiringNo")
     List<ApplyEntity> findByHiringNoWithUserInfo(@Param("hiringNo") Long hiringNo);
 
+    @Modifying
+    @Query(value = "UPDATE hiring_board SET " +
+            "HIRING_STS = '02', " +
+            "updt_date = NOW(), " +
+            "updt_id = :userId " +
+            "WHERE HIRING_NO = :hiringNo",
+            nativeQuery = true) // 이 옵션이 핵심입니다!
+    int updateStatusHiringBoard(@Param("userId") String userId, @Param("hiringNo") Long hiringNo);
+
+    @Modifying
+    @Query(value = "UPDATE apply_info " +
+            "SET apply_suc_yn = 'Y', " +
+            "    updt_date = NOW(), " +
+            "    updt_id = :userId, " +
+            "    apply_sts = :applySts "+
+            "WHERE apply_no in (:applyNos) " +
+            "  AND hiring_no = :hiringNo", nativeQuery = true)
+    int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo, @Param("applySts") String applySts);
 }
