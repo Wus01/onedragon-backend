@@ -7,11 +7,14 @@ import restapi.prac.model.dto.response.ApplyDTO;
 import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.model.entity.HiringBoardEntity;
+import restapi.prac.model.entity.NotificationEntity;
 import restapi.prac.model.entity.UserInfoEntity;
 import restapi.prac.repository.ApplyRepository;
 import restapi.prac.repository.HiringRepository;
+import restapi.prac.repository.NotificationRepository;
 import restapi.prac.repository.UserInfoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ public class ApplyService {
     private final ApplyRepository applyRepository;
     private final HiringRepository hiringRepository;
     private final UserInfoRepository userInfoRepository;
+    private final NotificationRepository notificationRepository;
 
     //상세조회
     public Optional<ApplyEntity> getPost(Long id){
@@ -57,6 +61,7 @@ public class ApplyService {
                 .hiringBoardEntity(faceHiringBoard)
                 .userInfo(userInfo)
                 .build();
+
         return applyRepository.save(applyInfo);
     }
 
@@ -75,8 +80,33 @@ public class ApplyService {
         // 2. 두 번째 업데이트 (apply_info)
         int result2 = applyRepository.updateStatusApplyInfo(userId, applyNos, hiringNo, applySts); //id, hiringNo
 
-        if (result1 == 0 || result2 == 0) {
-            throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");
+        // 3. 알림 테이블에 insert(notification)
+        // appyNo로 applyUserId 조회
+        List<ApplyEntity> applyInfoList = applyRepository.findAllById(applyNos);
+
+        // 알림테이블에 insert
+        String message = "지원하신 공고에 최종 확정되셨습니다! 🎉";
+        String targetUrl = "/hiring/" + hiringNo; // 공고 상세 페이지로 연결
+        List<NotificationEntity> notifications = new ArrayList<>();
+        System.out.println("🔥 디버그 - notifications: " + notifications.size());
+        for(ApplyEntity applyInfo : applyInfoList){
+            System.out.println("🔥 디버그 - applyNo: " + applyInfo.getApplyNo() + ", rcvrId: " + applyInfo.getRgstId());
+            NotificationEntity noti = NotificationEntity.builder()
+                    .applyNo(applyInfo.getApplyNo())
+                    .rcvrId(applyInfo.getRgstId())
+                    .readYn("N")
+                    .notiContent(message)
+                    .targetUrl(targetUrl)
+                    .rgstId(userId)
+                    .build();
+            notifications.add(noti);
+        }
+
+        // save가 반환값이 없어서 result 체크하기 위해 List에 담기
+        List<NotificationEntity> savedNotifications = notificationRepository.saveAll(notifications);
+        int result3 = savedNotifications.size();
+        if (result1 == 0 || result2 == 0 || result3 == 0) {
+            throw new RuntimeException("업데이트 대상이 존재하지 않거나, 알림이 생성되지 않았습니다.");
         }
     }
 
@@ -84,5 +114,6 @@ public class ApplyService {
     public boolean checkApplySts(Long hiringNo, String rgstId) {
         return applyRepository.existsByHiringBoardEntity_HiringNoAndRgstId(hiringNo, rgstId);
     }
+
 
 }

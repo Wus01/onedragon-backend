@@ -39,7 +39,9 @@ public class SecurityConfig {
                                 "/api/mypage/**",
                                 "/api/crrHstr/**",
                                 "/api/hiring/**", "/api/apply/**",
-                                "/api/store/**"
+                                "/api/store/**",
+                                "/api/noti/**",
+                                "/error"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
