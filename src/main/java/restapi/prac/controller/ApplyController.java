@@ -2,7 +2,9 @@ package restapi.prac.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.dto.response.ApplyDTO;
 import restapi.prac.model.dto.response.HiringBoardDTO;
@@ -75,10 +77,12 @@ public class ApplyController {
         try {
             ApplyEntity insertApplyInfo = applyService.insertApplyInfo(applyDto);
             return ResponseEntity.ok("지원성공");
-        }catch (Exception e){
+        } catch (IllegalStateException e) {
+            // 중복 지원일 경우 409 상태 코드와 에러 메시지를 반환
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e){
             return ResponseEntity.status(500).body("지원 처리 중 오류 발생: " + e.getMessage());
         }
-
     }
 
     /**
@@ -94,5 +98,11 @@ public class ApplyController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("확정 처리 중 오류 발생: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkApplyStatus(@RequestParam Long hiringNo, @RequestParam String rgstId){
+        boolean isApplied = applyService.checkApplySts(hiringNo, rgstId);
+        return ResponseEntity.ok(isApplied);
     }
 }

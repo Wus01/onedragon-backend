@@ -63,4 +63,11 @@ public class UserInfoController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
+
+    // 마이페이지 내 정보 수정
+    @PutMapping("/updateUserInfo")
+    public ResponseEntity<UserInfoEntity> updateUserInfo(@RequestBody UserInfoEntity userInfo){
+        UserInfoEntity updateUserInfo = userInfoService.updateUserInfo(userInfo);
+        return ResponseEntity.ok(updateUserInfo);
+    }
 }

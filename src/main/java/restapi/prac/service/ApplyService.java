@@ -38,6 +38,11 @@ public class ApplyService {
     // 지원하기
     @Transactional
     public ApplyEntity insertApplyInfo(ApplyDTO applyDto){
+        // 지원여부 확인
+        if (applyRepository.existsByHiringBoardEntity_HiringNoAndRgstId(applyDto.getHiringNo(), applyDto.getRgstId())) {
+            throw new IllegalStateException("이미 지원하신 공고입니다.");
+        }
+
         // DTO로 받아온 경우에는 builder()써서 Entity형태로 바꾸는 작업 필요
         // Entity로 받아온 경우에는 그냥 save 때리면 됨
         // hiringNo는 ApplyEntity에서 hiringBoardEntity 객체 안에 있어서 따로 세팅해줘야함
@@ -74,4 +79,10 @@ public class ApplyService {
             throw new RuntimeException("업데이트 대상이 존재하지 않습니다.");
         }
     }
+
+    @Transactional
+    public boolean checkApplySts(Long hiringNo, String rgstId) {
+        return applyRepository.existsByHiringBoardEntity_HiringNoAndRgstId(hiringNo, rgstId);
+    }
+
 }

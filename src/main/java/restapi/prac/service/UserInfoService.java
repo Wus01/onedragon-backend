@@ -3,6 +3,7 @@ package restapi.prac.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import restapi.prac.model.entity.UserInfoEntity;
 import restapi.prac.repository.UserInfoRepository;
 
@@ -81,5 +82,34 @@ public class UserInfoService {
         userInfoRepository.save(user); // 새로운 암호로 덮어쓰기
 
         return tempPassword;
+    }
+
+    // 마이페이지 내 정보 수정
+    @Transactional
+    public UserInfoEntity updateUserInfo(UserInfoEntity userInfo){
+        UserInfoEntity userInfoEntity = userInfoRepository.findById(userInfo.getUserId())
+        .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+
+        // 수정일시, 수정아이디 세팅
+        userInfoEntity.setUpdtDate(new Date());
+        userInfoEntity.setUpdtId(userInfo.getUserId());
+
+        // 이메일 세팅
+        if(userInfo.getUserEmail() != null && !userInfo.getUserEmail().isEmpty()){
+            userInfoEntity.setUserEmail(userInfo.getUserEmail());
+        }
+
+        // 핸드폰번호 세팅
+        if(userInfo.getUserPhoneNm() != null && !userInfo.getUserPhoneNm().isEmpty()){
+            userInfoEntity.setUserPhoneNm(userInfo.getUserPhoneNm());
+        }
+
+        // 비밀번호 세팅
+        if(userInfo.getUserPwd() != null && !userInfo.getUserPwd().isEmpty()){
+            String encoded = passwordEncoder.encode(userInfo.getUserPwd());
+            userInfoEntity.setUserPwd(encoded);
+        }
+
+        return userInfo;
     }
 }

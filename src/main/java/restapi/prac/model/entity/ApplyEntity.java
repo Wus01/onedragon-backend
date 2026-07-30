@@ -27,7 +27,6 @@ public class ApplyEntity {
     private String updtDate;
     private String updtId;
 
-    // ApplyInfo.java (예시)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hiring_no")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applyList"})
