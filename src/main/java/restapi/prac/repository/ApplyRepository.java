@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import restapi.prac.model.entity.ApplyEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
@@ -45,4 +46,6 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
     int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo, @Param("applySts") String applySts);
 
     boolean existsByHiringBoardEntity_HiringNoAndRgstId(Long hiringNo, String applyUserId);
+
+    Optional<ApplyEntity> findByHiringBoardEntity_HiringNoAndRgstId(Long hiringNo, String rgstId);
 }

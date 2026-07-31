@@ -48,4 +48,18 @@ public class JwtService {
                 .signWith(getSigningKey(), Jwts.SIG.HS256) // HMAC SHA-256 알고리즘과 비밀 키로 서명
                 .compact(); // 토큰 생성 완료
     }
+
+    /**
+     * JWT 토큰에서 사용자 ID(Subject) 추출
+     * @param token 헤더에서 전달받은 순수 토큰 문자열
+     * @return 사용자 ID
+     */
+    public String getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey()) // 우리가 만든 비밀키로 위조되지 않았는지 검증
+                .build()
+                .parseSignedClaims(token)    // 토큰 해독
+                .getPayload()                // 안에 들어있는 데이터(Payload) 꺼내기
+                .getSubject();               // 토큰 생성 시 setSubject()로 넣었던 userId 반환
+    }
 }

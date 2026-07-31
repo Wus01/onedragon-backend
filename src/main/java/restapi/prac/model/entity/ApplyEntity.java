@@ -26,6 +26,7 @@ public class ApplyEntity {
     private String rgstId;
     private String updtDate;
     private String updtId;
+    private String applySts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hiring_no")

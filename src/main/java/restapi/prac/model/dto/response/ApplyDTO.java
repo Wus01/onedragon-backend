@@ -29,5 +29,8 @@ public class ApplyDTO {
     private String userId; // 로그인id
     private String storeNm;
     private String applySts;
+    private boolean accepted;
+    private boolean applied;
+
 
 }

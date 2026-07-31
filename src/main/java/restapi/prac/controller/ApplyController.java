@@ -1,5 +1,6 @@
 package restapi.prac.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,16 +12,20 @@ import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.service.ApplyService;
+import restapi.prac.service.JwtService;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/apply")
 @Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/api/apply")
 public class ApplyController {
     @Autowired
     private ApplyService applyService;
+
+    private final JwtService jwtService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ApplyEntity> getPost(@PathVariable Long id){
@@ -101,8 +106,13 @@ public class ApplyController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<Boolean> checkApplyStatus(@RequestParam Long hiringNo, @RequestParam String rgstId){
-        boolean isApplied = applyService.checkApplySts(hiringNo, rgstId);
-        return ResponseEntity.ok(isApplied);
+    public ResponseEntity<ApplyDTO> checkApplyStatus(@RequestParam Long hiringNo, @RequestHeader("Authorization") String authHeader){
+        String token = authHeader.replace("Bearer ", "");
+        String rgstId = jwtService.getUserIdFromToken(token);
+
+        ApplyDTO applyChk = applyService.checkApplySts(hiringNo, rgstId);
+
+        return ResponseEntity.ok(applyChk);
     }
+
 }

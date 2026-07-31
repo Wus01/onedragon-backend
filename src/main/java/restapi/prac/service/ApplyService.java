@@ -1,8 +1,10 @@
 package restapi.prac.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import restapi.prac.component.SseEmitters;
 import restapi.prac.model.dto.response.ApplyDTO;
 import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
@@ -20,12 +22,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
     private final HiringRepository hiringRepository;
     private final UserInfoRepository userInfoRepository;
     private final NotificationRepository notificationRepository;
+    private final SseEmitters sseEmitters;
 
     //상세조회
     public Optional<ApplyEntity> getPost(Long id){
@@ -88,7 +92,7 @@ public class ApplyService {
         String message = "지원하신 공고에 최종 확정되셨습니다! 🎉";
         String targetUrl = "/hiring/" + hiringNo; // 공고 상세 페이지로 연결
         List<NotificationEntity> notifications = new ArrayList<>();
-        System.out.println("🔥 디버그 - notifications: " + notifications.size());
+
         for(ApplyEntity applyInfo : applyInfoList){
             System.out.println("🔥 디버그 - applyNo: " + applyInfo.getApplyNo() + ", rcvrId: " + applyInfo.getRgstId());
             NotificationEntity noti = NotificationEntity.builder()
@@ -104,16 +108,42 @@ public class ApplyService {
 
         // save가 반환값이 없어서 result 체크하기 위해 List에 담기
         List<NotificationEntity> savedNotifications = notificationRepository.saveAll(notifications);
+
         int result3 = savedNotifications.size();
         if (result1 == 0 || result2 == 0 || result3 == 0) {
             throw new RuntimeException("업데이트 대상이 존재하지 않거나, 알림이 생성되지 않았습니다.");
         }
+
+        for (NotificationEntity noti : savedNotifications) {
+            try {
+                // rcvrId(지원자 아이디)를 키값으로 해서 알림 데이터 전송
+                sseEmitters.send(noti.getRcvrId(), noti);
+            } catch (Exception e) {
+                // 💡 꿀팁: SSE 전송에 실패하더라도 지원 확정(DB 저장) 자체가 롤백되면 안 되므로
+                // try-catch로 감싸서 로그만 남기고 무시하는 것이 좋습니다.
+                log.debug("SSE 알림 전송 실패 - 수신자: " + noti.getRcvrId());
+            }
+        }
     }
 
-    @Transactional
-    public boolean checkApplySts(Long hiringNo, String rgstId) {
-        return applyRepository.existsByHiringBoardEntity_HiringNoAndRgstId(hiringNo, rgstId);
+    @Transactional(readOnly = true) // readOnly 달면 성능 좋아진다함
+    public ApplyDTO checkApplySts(Long hiringNo, String rgstId) {
+        ApplyDTO result = new ApplyDTO();
+        return applyRepository.findByHiringBoardEntity_HiringNoAndRgstId(hiringNo, rgstId)
+                .map(apply -> {
+                    boolean isAccepted = "04".equals(apply.getApplySts()); //합격여부확인
+                    result.setApplySts(apply.getApplySts());
+                    result.setAccepted(isAccepted);
+                    result.setApplied(true);
+                    return result;
+                })
+                .orElseGet(() -> {
+                    // 3. 데이터가 없으면(지원안함): 모두 false, 상태값 null로 반환
+                    result.setApplySts(null);
+                    result.setAccepted(false);
+                    result.setApplied(true);
+                    return result;
+                });
     }
-
 
 }
