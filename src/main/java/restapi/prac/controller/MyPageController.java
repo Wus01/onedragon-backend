@@ -57,9 +57,12 @@ public class MyPageController {
      */
     @GetMapping("/myApplyList")
     public ResponseEntity<?> selectMyApplyList(
-            @ModelAttribute ApplyDTO applicationDto) {
+            @RequestHeader("Authorization") String authHeader) {
 
-        String userId = applicationDto.getUserId();
+//        String userId = applicationDto.getUserId();
+        String token = authHeader.replace("Bearer ", "");
+        String userId = jwtService.getUserIdFromToken(token);
+
         List<ApplyDTO> applyList = mypageService.selectMyApplyList(userId);
         return ResponseEntity.ok(applyList);
     }
@@ -70,9 +73,11 @@ public class MyPageController {
      */
     @GetMapping("/myHiringList")
     public ResponseEntity<?> selectMyHiringList(
-            @ModelAttribute HiringBoardDTO hiringBoardDTO) {
+            @RequestHeader("Authorization") String authHeader) {
+//        String userId = hiringBoardDTO.getUserId();
+        String token = authHeader.replace("Bearer ", "");
 
-        String userId = hiringBoardDTO.getUserId();
+        String userId = jwtService.getUserIdFromToken(token);
         List<HiringBoardDTO> applyList = mypageService.selectMyHiringList(userId);
         return ResponseEntity.ok(applyList);
     }

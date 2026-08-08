@@ -14,6 +14,7 @@ import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.ApplyEntity;
 import restapi.prac.model.entity.NotificationEntity;
 import restapi.prac.service.ApplyService;
+import restapi.prac.service.JwtService;
 import restapi.prac.service.NotificationService;
 
 import java.io.IOException;
@@ -30,8 +31,13 @@ public class NotificationController {
 
     private final SseEmitters sseEmitters;
 
+    private final JwtService jwtService;
+
     @GetMapping("/getNotifications")
-    public ResponseEntity<List<NotificationEntity>> getMyNotifications(@RequestParam String userId){
+    public ResponseEntity<List<NotificationEntity>> getMyNotifications(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.replace("Bearer ", "");
+        String userId = jwtService.getUserIdFromToken(token);
+
         List<NotificationEntity> notifications = notificationService.getMyNotifications(userId);
         return ResponseEntity.ok(notifications);
     }
@@ -45,9 +51,10 @@ public class NotificationController {
 
     // 전체 알림 클릭 시
     @PostMapping("/markAllAsRead")
-//    @GetMapping("/markAllAsRead")
-    public ResponseEntity<String> markAllAsread(@RequestParam String userId){
-        System.out.println("GET 요청 컨트롤러 진입 성공! userId: " + userId);
+    public ResponseEntity<String> markAllAsread(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.replace("Bearer ", "");
+        String userId = jwtService.getUserIdFromToken(token);
+
         notificationService.markAllAsRead(userId);
         return ResponseEntity.ok("success");
     }

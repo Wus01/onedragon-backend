@@ -1,5 +1,6 @@
 package restapi.prac.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.dto.response.HiringBoardDTO;
 import restapi.prac.model.entity.HiringBoardEntity;
 import restapi.prac.service.HiringService;
+import restapi.prac.service.JwtService;
 
 import java.util.Optional;
 
@@ -19,9 +21,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/hiring")
 @Slf4j
+@RequiredArgsConstructor
 public class HiringController {
     @Autowired
     private HiringService hiringService;
+
+    private final JwtService jwtService;
 
     //상세보기
 //    @GetMapping("/hiring/{id}")
@@ -89,8 +94,13 @@ public class HiringController {
 
     // 공고 데이터 리스트 저장
     @PostMapping("/add")
-    public ResponseEntity<?> createHiring(@RequestBody HiringBoardEntity hiringEntity){
+    public ResponseEntity<?> createHiring(@RequestBody HiringBoardEntity hiringEntity, @RequestHeader("Authorization") String authHeader){
         try{
+            String token = authHeader.replace("Bearer ", "");
+            String realUserId = jwtService.getUserIdFromToken(token);
+            hiringEntity.setUserId(realUserId);
+            hiringEntity.setRgstId(realUserId);
+
             HiringBoardEntity createHiring = hiringService.createHiring(hiringEntity);
 
             return ResponseEntity.ok("성공적으로 확정되었습니다.");

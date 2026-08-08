@@ -141,7 +141,7 @@ public class ApplyService {
                     // 3. 데이터가 없으면(지원안함): 모두 false, 상태값 null로 반환
                     result.setApplySts(null);
                     result.setAccepted(false);
-                    result.setApplied(true);
+                    result.setApplied(false);
                     return result;
                 });
     }
