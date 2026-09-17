@@ -45,7 +45,7 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity, Long> {
             "  AND hiring_no = :hiringNo", nativeQuery = true)
     int updateStatusApplyInfo(@Param("userId") String userId, @Param("applyNos") List<Long> applyNos, @Param("hiringNo") Long hiringNo, @Param("applySts") String applySts);
 
-    boolean existsByHiringBoardEntity_HiringNoAndRgstId(Long hiringNo, String applyUserId);
+    boolean existsByHiringBoardEntity_HiringNoAndUserInfo_UserId(Long hiringNo, String userId);
 
-    Optional<ApplyEntity> findByHiringBoardEntity_HiringNoAndRgstId(Long hiringNo, String rgstId);
+    Optional<ApplyEntity> findByHiringBoardEntity_HiringNoAndUserInfo_UserId(Long hiringNo, String userId);
 }

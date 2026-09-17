@@ -35,7 +35,7 @@ public class ApplyEntity {
     private HiringBoardEntity hiringBoardEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apply_user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties({"applyList", "handler", "hibernateLazyInitializer"}) // applyList 참조 차단
     private UserInfoEntity userInfo; // 지원한 유저 정보
 

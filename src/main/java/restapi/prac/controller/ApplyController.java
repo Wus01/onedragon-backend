@@ -2,10 +2,8 @@ package restapi.prac.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import restapi.prac.model.dto.response.ApplyDTO;
 import restapi.prac.model.dto.response.HiringBoardDTO;
@@ -22,9 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/apply")
 public class ApplyController {
-    @Autowired
-    private ApplyService applyService;
-
+    private final ApplyService applyService;
     private final JwtService jwtService;
 
     @GetMapping("/{id}")
@@ -78,14 +74,25 @@ public class ApplyController {
 
     // 지원하기
     @PostMapping("/insertApply")
-    public ResponseEntity<?> insertApplyInfo(@RequestBody ApplyDTO applyDto){
+    public ResponseEntity<?> insertApplyInfo(
+            @RequestBody ApplyDTO applyDto,
+            @RequestHeader(value = "Authorization", required = false) String authHeader){
+        String applicantId;
         try {
-            ApplyEntity insertApplyInfo = applyService.insertApplyInfo(applyDto);
+            applicantId = getAuthenticatedUserId(authHeader);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+
+        try {
+            applyService.insertApplyInfo(applyDto.getHiringNo(), applicantId);
             return ResponseEntity.ok("지원성공");
         } catch (IllegalStateException e) {
-            // 중복 지원일 경우 409 상태 코드와 에러 메시지를 반환
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
+            log.error("지원 처리 중 오류 발생 - hiringNo: {}, applicantId: {}", applyDto.getHiringNo(), applicantId, e);
             return ResponseEntity.status(500).body("지원 처리 중 오류 발생: " + e.getMessage());
         }
     }
@@ -106,13 +113,36 @@ public class ApplyController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<ApplyDTO> checkApplyStatus(@RequestParam Long hiringNo, @RequestHeader("Authorization") String authHeader){
-        String token = authHeader.replace("Bearer ", "");
-        String rgstId = jwtService.getUserIdFromToken(token);
+    public ResponseEntity<?> checkApplyStatus(
+            @RequestParam Long hiringNo,
+            @RequestHeader(value = "Authorization", required = false) String authHeader){
+        String rgstId;
+        try {
+            rgstId = getAuthenticatedUserId(authHeader);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
 
         ApplyDTO applyChk = applyService.checkApplySts(hiringNo, rgstId);
 
         return ResponseEntity.ok(applyChk);
+    }
+
+    private String getAuthenticatedUserId(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        String token = authHeader.substring(7).trim();
+        if (token.isEmpty()) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        try {
+            return jwtService.getUserIdFromToken(token);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("로그인 정보가 유효하지 않습니다.");
+        }
     }
 
 }

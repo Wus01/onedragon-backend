@@ -45,24 +45,35 @@ public class ApplyService {
 
     // 지원하기
     @Transactional
-    public ApplyEntity insertApplyInfo(ApplyDTO applyDto){
-        // 지원여부 확인
-        if (applyRepository.existsByHiringBoardEntity_HiringNoAndRgstId(applyDto.getHiringNo(), applyDto.getRgstId())) {
+    public ApplyEntity insertApplyInfo(Long hiringNo, String applicantId){
+        if (hiringNo == null) {
+            throw new IllegalArgumentException("채용 공고 번호가 필요합니다.");
+        }
+
+        HiringBoardEntity hiringBoard = hiringRepository.findById(hiringNo)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채용 공고입니다."));
+
+        if ("02".equals(hiringBoard.getHiringSts())) {
+            throw new IllegalStateException("마감된 채용 공고에는 지원할 수 없습니다.");
+        }
+
+        if (applicantId.equals(hiringBoard.getRgstId()) || applicantId.equals(hiringBoard.getUserId())) {
+            throw new IllegalStateException("본인이 등록한 채용 공고에는 지원할 수 없습니다.");
+        }
+
+        // 지원 여부는 등록자 감사 컬럼이 아닌 실제 지원자 관계를 기준으로 확인한다.
+        if (applyRepository.existsByHiringBoardEntity_HiringNoAndUserInfo_UserId(hiringNo, applicantId)) {
             throw new IllegalStateException("이미 지원하신 공고입니다.");
         }
 
-        // DTO로 받아온 경우에는 builder()써서 Entity형태로 바꾸는 작업 필요
-        // Entity로 받아온 경우에는 그냥 save 때리면 됨
-        // hiringNo는 ApplyEntity에서 hiringBoardEntity 객체 안에 있어서 따로 세팅해줘야함
-        Long hiringNo = applyDto.getHiringNo();
-        String rgstId = applyDto.getRgstId();
-        HiringBoardEntity faceHiringBoard = hiringRepository.getReferenceById(hiringNo);
-        UserInfoEntity userInfo = userInfoRepository.getReferenceById(rgstId);
+        UserInfoEntity userInfo = userInfoRepository.findById(applicantId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
         ApplyEntity applyInfo = ApplyEntity.builder()
-                .applySucYn(applyDto.getApplySucYn())
-                .rgstId(applyDto.getRgstId())
-//                .applyUserId(applyDto.getRgstId())
-                .hiringBoardEntity(faceHiringBoard)
+                .applySucYn("N")
+                .applySts("01")
+                .rgstId(applicantId)
+                .hiringBoardEntity(hiringBoard)
                 .userInfo(userInfo)
                 .build();
 
@@ -129,7 +140,7 @@ public class ApplyService {
     @Transactional(readOnly = true) // readOnly 달면 성능 좋아진다함
     public ApplyDTO checkApplySts(Long hiringNo, String rgstId) {
         ApplyDTO result = new ApplyDTO();
-        return applyRepository.findByHiringBoardEntity_HiringNoAndRgstId(hiringNo, rgstId)
+        return applyRepository.findByHiringBoardEntity_HiringNoAndUserInfo_UserId(hiringNo, rgstId)
                 .map(apply -> {
                     boolean isAccepted = "04".equals(apply.getApplySts()); //합격여부확인
                     result.setApplySts(apply.getApplySts());

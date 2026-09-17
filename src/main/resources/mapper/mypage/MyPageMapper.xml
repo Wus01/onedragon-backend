@@ -41,7 +41,7 @@
         on ccd2.dtl_cd = hb.hiring_sts
         and ccd2.mstr_cd = 'HIRING_STS'
         where 1=1
-        and ai.apply_user_id = #{userId}
+        and ai.user_id = #{userId}
         order by ai.rgst_date DESC
     </select>
 
