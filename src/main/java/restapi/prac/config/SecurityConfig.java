@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 "/api/hiring/**", "/api/apply/**",
                                 "/api/store/**",
                                 "/api/noti/**",
+                                "/api/inquiries/**",
                                 "/error"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
